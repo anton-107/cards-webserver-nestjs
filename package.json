@@ -11,12 +11,17 @@
     "fix-format": "prettier --write .",
     "lint": "eslint . --ext .ts",
     "fix-lint": "eslint . --ext .ts --fix",
-    "fix": "npm run fix-format && npm run fix-lint"
+    "fix": "npm run fix-format && npm run fix-lint",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@nestjs/cli": "^10.3.2",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "eslint": "^8.56.0",
@@ -26,5 +31,10 @@
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.2",
+    "@nestjs/core": "^10.3.2",
+    "@nestjs/platform-express": "^10.3.2"
   }
 }
