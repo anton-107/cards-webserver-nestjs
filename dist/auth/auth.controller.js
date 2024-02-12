@@ -32,62 +32,35 @@ var __param =
     };
   };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppController = void 0;
+exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
-const app_service_1 = require("./app.service");
-let AppController = class AppController {
-  constructor(appService) {
-    this.appService = appService;
-  }
-  getHello() {
-    return this.appService.getHello();
-  }
-  getName() {
-    return "My name is Nest";
-  }
-  postName(requestBody) {
-    return `You just posted: ${requestBody.name}`;
+let AuthController = class AuthController {
+  async signIn(body) {
+    return {
+      signInResult: false,
+      message: `Sign in failed with the following parameters: ${JSON.stringify(body)}`,
+    };
   }
 };
-exports.AppController = AppController;
+exports.AuthController = AuthController;
 __decorate(
   [
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String),
-  ],
-  AppController.prototype,
-  "getHello",
-  null,
-);
-__decorate(
-  [
-    (0, common_1.Get)("/name"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", String),
-  ],
-  AppController.prototype,
-  "getName",
-  null,
-);
-__decorate(
-  [
-    (0, common_1.Post)("/name"),
+    (0, common_1.Post)("/signin"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", String),
+    __metadata("design:returntype", Promise),
   ],
-  AppController.prototype,
-  "postName",
+  AuthController.prototype,
+  "signIn",
   null,
 );
-exports.AppController = AppController = __decorate(
+exports.AuthController = AuthController = __decorate(
   [
-    (0, common_1.Controller)(),
-    __metadata("design:paramtypes", [app_service_1.AppService]),
+    (0, common_1.Controller)({
+      path: "/auth",
+      version: "1",
+    }),
   ],
-  AppController,
+  AuthController,
 );
