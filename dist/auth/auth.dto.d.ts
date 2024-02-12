@@ -1,12 +1,12 @@
-interface SignInRequest {
-  login: string;
-  password: string;
+export interface SignInRequest {
+    login: string;
+    password: string;
 }
-interface SignInSuccessResponse {
-  bearerToken: string;
+export interface SignInSuccessResponse {
+    bearerToken: string;
 }
-interface SignInErrorResponse {
-  signInResult: boolean;
-  message: string;
+export interface SignInErrorResponse {
+    signInResult: boolean;
+    message: string;
 }
 //# sourceMappingURL=auth.dto.d.ts.map

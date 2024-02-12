@@ -1,2 +1,3 @@
-export declare class AuthService {}
+export declare class AuthService {
+}
 //# sourceMappingURL=auth.service.d.ts.map

@@ -1,5 +1,11 @@
 import { Body, Controller, Post } from "@nestjs/common";
 
+import {
+  SignInErrorResponse,
+  SignInRequest,
+  SignInSuccessResponse,
+} from "./auth.dto";
+
 @Controller({
   path: "/auth",
   version: "1",
