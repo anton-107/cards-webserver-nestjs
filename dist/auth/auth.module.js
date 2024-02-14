@@ -11,12 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
+const authenticator_1 = require("authentication-module/dist/authenticator");
+const scrypt_hashing_1 = require("authentication-module/dist/scrypt-hashing");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
-const authenticator_1 = require("authentication-module/dist/authenticator");
 const authenticator_provider_1 = require("./authenticator.provider");
 const user_repository_1 = require("./user.repository");
-const scrypt_hashing_1 = require("authentication-module/dist/scrypt-hashing");
 const userRepository = new user_repository_1.InMemoryUserRepository();
 const hashGenerator = new scrypt_hashing_1.ScryptHashingFunction();
 let AuthModule = class AuthModule {
@@ -25,8 +25,8 @@ let AuthModule = class AuthModule {
     }
     async generateDemoUsers() {
         userRepository.addUser({
-            username: 'testuser1',
-            passwordHash: await hashGenerator.generateHash('password-1')
+            username: "testuser1",
+            passwordHash: await hashGenerator.generateHash("password-1"),
         });
     }
 };
@@ -38,16 +38,16 @@ exports.AuthModule = AuthModule = __decorate([
             auth_service_1.AuthService,
             {
                 provide: authenticator_1.Authenticator,
-                useClass: authenticator_provider_1.ScryptJWTAuthenticator
+                useClass: authenticator_provider_1.ScryptJWTAuthenticator,
             },
             {
-                provide: 'PasswordHashingFunction',
-                useValue: hashGenerator
+                provide: "PasswordHashingFunction",
+                useValue: hashGenerator,
             },
             {
-                provide: 'UserStore',
-                useValue: userRepository
-            }
+                provide: "UserStore",
+                useValue: userRepository,
+            },
         ],
     }),
     __metadata("design:paramtypes", [])

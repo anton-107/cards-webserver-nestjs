@@ -19,18 +19,19 @@ let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
     }
-    async signIn(body) {
+    async signIn(body, response) {
         try {
             const accessToken = await this.authService.signIn(body.login, body.password);
             return {
-                bearerToken: accessToken
+                bearerToken: accessToken,
             };
         }
         catch (error) {
-            console.error(error);
+            // console.error(error);
+            response.status(common_1.HttpStatus.FORBIDDEN);
             return {
                 signInResult: false,
-                message: 'Authentication failed. Please check your user name and password and try again.',
+                message: "Authentication failed. Please check your user name and password and try again.",
             };
         }
     }
@@ -38,9 +39,11 @@ let AuthController = class AuthController {
 exports.AuthController = AuthController;
 __decorate([
     (0, common_1.Post)("/signin"),
+    (0, common_1.HttpCode)(200),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 exports.AuthController = AuthController = __decorate([

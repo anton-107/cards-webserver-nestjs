@@ -1,4 +1,12 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from "@nestjs/common";
+import { Response } from "express";
 
 import {
   SignInErrorResponse,
@@ -15,8 +23,10 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("/signin")
+  @HttpCode(200)
   public async signIn(
     @Body() body: SignInRequest,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<SignInSuccessResponse | SignInErrorResponse> {
     try {
       const accessToken = await this.authService.signIn(
@@ -28,6 +38,7 @@ export class AuthController {
       };
     } catch (error) {
       // console.error(error);
+      response.status(HttpStatus.FORBIDDEN);
       return {
         signInResult: false,
         message:

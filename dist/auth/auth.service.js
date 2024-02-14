@@ -29,7 +29,7 @@ let AuthService = class AuthService {
             if (authenticationResult.authenticationFailedReason) {
                 throw new AuthenticationError(authenticationResult.authenticationFailedReason);
             }
-            throw new AuthenticationError('Authentication failed');
+            throw new AuthenticationError("Authentication failed");
         }
         return authenticationResult.accessToken;
     }

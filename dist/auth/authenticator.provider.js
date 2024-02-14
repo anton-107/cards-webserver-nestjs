@@ -24,7 +24,7 @@ let ScryptJWTAuthenticator = class ScryptJWTAuthenticator extends authenticator_
             authTokensSerializer: new jwt_serializer_1.JWTSerializer({
                 jwt: new jwt_serializer_1.StandardJwtImplementation(),
                 secretKeyProvider: new jwt_serializer_1.SimpleStringProvider(String(Math.random())),
-            })
+            }),
         });
         this.userStore = userStore;
         this.passwordHashingFunction = passwordHashingFunction;
@@ -33,7 +33,7 @@ let ScryptJWTAuthenticator = class ScryptJWTAuthenticator extends authenticator_
 exports.ScryptJWTAuthenticator = ScryptJWTAuthenticator;
 exports.ScryptJWTAuthenticator = ScryptJWTAuthenticator = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)('UserStore')),
-    __param(1, (0, common_1.Inject)('PasswordHashingFunction')),
+    __param(0, (0, common_1.Inject)("UserStore")),
+    __param(1, (0, common_1.Inject)("PasswordHashingFunction")),
     __metadata("design:paramtypes", [Object, Object])
 ], ScryptJWTAuthenticator);
