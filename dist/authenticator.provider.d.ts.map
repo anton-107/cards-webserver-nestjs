@@ -1,0 +1,1 @@
+{"version":3,"file":"authenticator.provider.d.ts","sourceRoot":"","sources":["../src/authenticator.provider.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,aAAa,EAAE,SAAS,EAAE,MAAM,0CAA0C,CAAC;AAQpF,qBACa,sBAAuB,SAAQ,aAAa;IACtB,OAAO,CAAC,SAAS;gBAAT,SAAS,EAAE,SAAS;CAU9D"}

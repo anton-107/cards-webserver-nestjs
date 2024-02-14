@@ -5,19 +5,34 @@ import {
   SignInRequest,
   SignInSuccessResponse,
 } from "./auth.dto";
+import { AuthService } from "./auth.service";
 
 @Controller({
   path: "/auth",
   version: "1",
 })
 export class AuthController {
+  constructor(private authService: AuthService) {}
+
   @Post("/signin")
   public async signIn(
     @Body() body: SignInRequest,
   ): Promise<SignInSuccessResponse | SignInErrorResponse> {
-    return {
-      signInResult: false,
-      message: `Sign in failed with the following parameters: ${JSON.stringify(body)}`,
-    };
+    try {
+      const accessToken = await this.authService.signIn(
+        body.login,
+        body.password,
+      );
+      return {
+        bearerToken: accessToken,
+      };
+    } catch (error) {
+      // console.error(error);
+      return {
+        signInResult: false,
+        message:
+          "Authentication failed. Please check your user name and password and try again.",
+      };
+    }
   }
 }

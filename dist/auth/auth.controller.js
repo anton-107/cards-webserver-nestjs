@@ -14,12 +14,25 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const auth_service_1 = require("./auth.service");
 let AuthController = class AuthController {
+    constructor(authService) {
+        this.authService = authService;
+    }
     async signIn(body) {
-        return {
-            signInResult: false,
-            message: `Sign in failed with the following parameters: ${JSON.stringify(body)}`,
-        };
+        try {
+            const accessToken = await this.authService.signIn(body.login, body.password);
+            return {
+                bearerToken: accessToken
+            };
+        }
+        catch (error) {
+            console.error(error);
+            return {
+                signInResult: false,
+                message: 'Authentication failed. Please check your user name and password and try again.',
+            };
+        }
     }
 };
 exports.AuthController = AuthController;
@@ -34,5 +47,6 @@ exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)({
         path: "/auth",
         version: "1",
-    })
+    }),
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], AuthController);
