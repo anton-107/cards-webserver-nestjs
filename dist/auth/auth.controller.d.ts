@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Response } from "express";
 import { SignInErrorResponse, SignInRequest, SignInSuccessResponse } from "./auth.dto";
 import { AuthService } from "./auth.service";
 export declare class AuthController {
