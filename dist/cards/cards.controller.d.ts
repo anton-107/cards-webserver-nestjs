@@ -1,5 +1,5 @@
-import { CardsService } from './cards.service';
-import { NewCardRequestHttpBody } from './cards.dto';
+import { NewCardRequestHttpBody } from "./cards.dto";
+import { CardsService } from "./cards.service";
 export declare class CardsController {
     private cardsService;
     constructor(cardsService: CardsService);

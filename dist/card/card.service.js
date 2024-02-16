@@ -6,16 +6,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CardsModule = void 0;
+exports.CardService = void 0;
 const common_1 = require("@nestjs/common");
-const cards_controller_1 = require("./cards.controller");
-const cards_service_1 = require("./cards.service");
-let CardsModule = class CardsModule {
+let CardService = class CardService {
+    create(createCardDto) {
+        return 'This action adds a new card';
+    }
+    findAll() {
+        return `This action returns all card`;
+    }
+    findOne(id) {
+        return `This action returns a #${id} card`;
+    }
+    update(id, updateCardDto) {
+        return `This action updates a #${id} card`;
+    }
+    remove(id) {
+        return `This action removes a #${id} card`;
+    }
 };
-exports.CardsModule = CardsModule;
-exports.CardsModule = CardsModule = __decorate([
-    (0, common_1.Module)({
-        controllers: [cards_controller_1.CardsController],
-        providers: [cards_service_1.CardsService],
-    })
-], CardsModule);
+exports.CardService = CardService;
+exports.CardService = CardService = __decorate([
+    (0, common_1.Injectable)()
+], CardService);

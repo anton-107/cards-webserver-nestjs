@@ -14,10 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardsController = void 0;
 const common_1 = require("@nestjs/common");
-const cards_service_1 = require("./cards.service");
 const cards_dto_1 = require("./cards.dto");
-class ValidationError extends Error {
-}
+const cards_service_1 = require("./cards.service");
 let CardsController = class CardsController {
     constructor(cardsService) {
         this.cardsService = cardsService;
@@ -35,6 +33,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CardsController.prototype, "createCard", null);
 exports.CardsController = CardsController = __decorate([
-    (0, common_1.Controller)('cards'),
+    (0, common_1.Controller)("cards"),
     __metadata("design:paramtypes", [cards_service_1.CardsService])
 ], CardsController);

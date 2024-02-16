@@ -8,10 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardsService = void 0;
 const common_1 = require("@nestjs/common");
-const repository_1 = require("cards-model/dist/repository");
 const cards_repository_1 = require("cards-datalayer-dynamodb/dist/cards-repository");
-const short_uuid_counter_1 = require("cards-datalayer-dynamodb/dist/short-uuid-counter");
 const entity_1 = require("cards-datalayer-dynamodb/dist/dynamodb-toolbox/entity");
+const short_uuid_counter_1 = require("cards-datalayer-dynamodb/dist/short-uuid-counter");
+const repository_1 = require("cards-model/dist/repository");
 let CardsService = class CardsService {
     async createCard(card) {
         const repository = new repository_1.CardsRepository(new short_uuid_counter_1.ShortUUIDCounter());

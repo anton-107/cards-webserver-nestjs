@@ -14,8 +14,8 @@ const class_validator_1 = require("class-validator");
 class NewCardRequestHttpBody {
     constructor() {
         this.parentCardPathToRoot = null;
-        this.spaceID = '';
-        this.name = '';
+        this.spaceID = "";
+        this.name = "";
     }
 }
 exports.NewCardRequestHttpBody = NewCardRequestHttpBody;
@@ -33,4 +33,3 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], NewCardRequestHttpBody.prototype, "name", void 0);
-;
