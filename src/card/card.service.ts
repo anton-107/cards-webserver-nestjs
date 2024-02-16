@@ -1,16 +1,22 @@
 import { Injectable } from "@nestjs/common";
+import { CardsRepositoryDynamo } from "cards-datalayer-dynamodb/dist/cards-repository";
+import { CardEntity } from "cards-datalayer-dynamodb/dist/dynamodb-toolbox/entity";
+import { ShortUUIDCounter } from "cards-datalayer-dynamodb/dist/short-uuid-counter";
+import { CardsRepository } from "cards-model/dist/repository";
 
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 
 @Injectable()
 export class CardService {
-  create(createCardDto: CreateCardDto) {
-    return `This action adds a new card ${createCardDto}`;
+  async create(createCardDto: CreateCardDto) {
+    const repository = new CardsRepository(new ShortUUIDCounter());
+    const persistedRepository = new CardsRepositoryDynamo(CardEntity);
+    await persistedRepository.putCard(repository.addCard(createCardDto));
   }
 
   findAll() {
-    return `This action returns all card`;
+    return `This action returns all cards`;
   }
 
   findOne(id: number) {
