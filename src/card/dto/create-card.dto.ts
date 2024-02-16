@@ -1,21 +1,24 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsOptional, IsString, NotEquals } from "class-validator";
+import { IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
 
 export class CreateCardDto {
-  @IsString()
-  @IsOptional()
-  @NotEquals(undefined)
-  @ApiProperty({
-    description: "Parent cards path to root. Post `null` for root-level cards",
-    type: "string",
-  })
-  parentCardPathToRoot: string | null = null;
-
   @IsNotEmpty()
-  @ApiProperty()
+  @IsString()
+  @ApiProperty({ example: "space-1" })
   spaceID: string = "";
 
   @IsNotEmpty()
-  @ApiProperty()
+  @IsString()
+  @ApiProperty({ example: "Card 1" })
   name: string = "";
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ examples: [null, "card-1"], example: null })
+  parentTaskID?: string;
+
+  @IsObject()
+  @IsOptional()
+  @ApiProperty()
+  attributes: { [key: string]: string | number | boolean | null } = {};
 }

@@ -1,6 +1,9 @@
 export declare class CreateCardDto {
-    parentCardPathToRoot: string | null;
     spaceID: string;
     name: string;
+    parentTaskID?: string;
+    attributes: {
+        [key: string]: string | number | boolean | null;
+    };
 }
 //# sourceMappingURL=create-card.dto.d.ts.map

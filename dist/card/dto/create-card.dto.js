@@ -14,26 +14,33 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class CreateCardDto {
     constructor() {
-        this.parentCardPathToRoot = null;
         this.spaceID = "";
         this.name = "";
+        this.attributes = {};
     }
 }
 exports.CreateCardDto = CreateCardDto;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.NotEquals)(undefined),
-    (0, swagger_1.ApiProperty)({ description: 'Parent cards path to root. Post `null` for root-level cards', type: 'string' }),
-    __metadata("design:type", Object)
-], CreateCardDto.prototype, "parentCardPathToRoot", void 0);
-__decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ example: "space-1" }),
     __metadata("design:type", String)
 ], CreateCardDto.prototype, "spaceID", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ example: "Card 1" }),
     __metadata("design:type", String)
 ], CreateCardDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ examples: [null, "card-1"], example: null }),
+    __metadata("design:type", String)
+], CreateCardDto.prototype, "parentTaskID", void 0);
+__decorate([
+    (0, class_validator_1.IsObject)(),
+    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Object)
+], CreateCardDto.prototype, "attributes", void 0);

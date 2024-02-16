@@ -21,20 +21,20 @@ let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;
     }
-    create(createCardDto) {
-        return this.cardService.create(createCardDto);
+    async create(createCardDto) {
+        return await this.cardService.create(createCardDto);
     }
-    findAll() {
-        return this.cardService.findAll();
+    async findAll() {
+        return await this.cardService.findAll("space-1");
     }
-    findOne(id) {
-        return this.cardService.findOne(+id);
+    async findOne(id) {
+        return await this.cardService.findOne("space-1", id);
     }
     update(id, updateCardDto) {
-        return this.cardService.update(+id, updateCardDto);
+        return this.cardService.update("space-1", id, updateCardDto);
     }
     remove(id) {
-        return this.cardService.remove(+id);
+        return this.cardService.remove("space-1", id);
     }
 };
 exports.CardController = CardController;
@@ -43,20 +43,20 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [create_card_dto_1.CreateCardDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CardController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CardController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(":id"),
     __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CardController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)(":id"),
