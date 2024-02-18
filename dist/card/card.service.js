@@ -49,7 +49,9 @@ let CardService = class CardService {
             name: "Card",
             attributes: {
                 spaceID: { partitionKey: true },
-                cardID: { sortKey: true },
+                cardID: { sortKey: true }, // has format of <type>#<id>
+                id: "string", // id of a resource without card type
+                type: "string",
                 name: "string",
                 parentTaskID: { type: "string", required: false }, // Nullable
                 attributes: { type: "map" },
@@ -58,43 +60,69 @@ let CardService = class CardService {
             table: CardsTable,
         });
     }
-    async create(createCardDto) {
+    async create(type, createCardDto) {
         const cardID = short_uuid_1.default.generate();
         const card = {
             ...createCardDto,
-            cardID,
+            type,
+            id: cardID,
+            cardID: `${type}#${cardID}`,
         };
         await this.cardEntity.put(card);
-        return card;
+        return {
+            spaceID: card.spaceID,
+            id: card.id,
+            type: card.type,
+            name: card.name,
+            parentTaskID: card.parentTaskID || null,
+            attributes: card.attributes,
+        };
     }
-    async findAll(spaceID) {
+    async findAllOfType(spaceID, type) {
         try {
-            const results = await this.cardEntity.query(spaceID);
-            return results.Items;
+            const results = await this.cardEntity.query(spaceID, {
+                beginsWith: `${type}#`,
+            });
+            return results.Items?.map((x) => this.convertToCard(x));
         }
         catch (error) {
             // Handle or throw the error appropriately
             throw new Error(`Error fetching cards for spaceID ${spaceID}: ${error}`);
         }
     }
-    async findOne(spaceID, cardID) {
+    async findOneOfType(spaceID, type, cardID) {
         const result = (await this.cardEntity.get({
             spaceID,
-            cardID,
+            cardID: `${type}#${cardID}`,
         }));
-        return result.Item || null;
+        if (!result.Item) {
+            return null;
+        }
+        const card = result.Item;
+        return this.convertToCard(card);
     }
-    async update(spaceID, cardID, updateCardDto) {
+    async update(cardIdentity, updateCardDto) {
         const updatedCard = (await this.cardEntity.update({
             ...updateCardDto,
-            spaceID,
-            cardID,
+            spaceID: cardIdentity.spaceID,
+            id: cardIdentity.cardID,
+            cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
         }, { returnValues: "ALL_NEW" }));
         return updatedCard.Attributes;
     }
-    async remove(spaceID, cardID) {
-        await this.cardEntity.delete({ spaceID, cardID });
+    async remove(spaceID, type, cardID) {
+        await this.cardEntity.delete({ spaceID, cardID: `${type}#${cardID}` });
         return { message: "Card deleted successfully." };
+    }
+    convertToCard(card) {
+        return {
+            spaceID: card.spaceID,
+            id: card.id,
+            type: card.type,
+            name: card.name,
+            parentTaskID: card.parentTaskID || null,
+            attributes: card.attributes,
+        };
     }
 };
 exports.CardService = CardService;

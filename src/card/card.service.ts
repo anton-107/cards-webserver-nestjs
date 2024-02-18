@@ -8,6 +8,7 @@ import { Injectable } from "@nestjs/common";
 import { Entity, Table } from "dynamodb-toolbox";
 import shortUUID from "short-uuid";
 
+import { CardIdentity } from "./dto/card-identity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { Card } from "./entities/card.entity";
@@ -54,7 +55,9 @@ export class CardService {
       name: "Card",
       attributes: {
         spaceID: { partitionKey: true },
-        cardID: { sortKey: true },
+        cardID: { sortKey: true }, // has format of <type>#<id>
+        id: "string", // id of a resource without card type
+        type: "string",
         name: "string",
         parentTaskID: { type: "string", required: false }, // Nullable
         attributes: { type: "map" },
@@ -64,48 +67,79 @@ export class CardService {
     } as const);
   }
 
-  async create(createCardDto: CreateCardDto) {
+  async create(type: string, createCardDto: CreateCardDto): Promise<Card> {
     const cardID = shortUUID.generate();
     const card = {
       ...createCardDto,
-      cardID,
+      type,
+      id: cardID,
+      cardID: `${type}#${cardID}`,
     };
     await this.cardEntity.put(card);
-    return card;
+    return {
+      spaceID: card.spaceID,
+      id: card.id,
+      type: card.type,
+      name: card.name,
+      parentTaskID: card.parentTaskID || null,
+      attributes: card.attributes,
+    };
   }
 
-  async findAll(spaceID: string) {
+  async findAllOfType(spaceID: string, type: string) {
     try {
-      const results = await this.cardEntity.query(spaceID);
-      return results.Items;
+      const results = await this.cardEntity.query(spaceID, {
+        beginsWith: `${type}#`,
+      });
+      return results.Items?.map((x) => this.convertToCard(x as Card));
     } catch (error) {
       // Handle or throw the error appropriately
       throw new Error(`Error fetching cards for spaceID ${spaceID}: ${error}`);
     }
   }
 
-  async findOne(spaceID: string, cardID: string): Promise<Card | null> {
+  async findOneOfType(
+    spaceID: string,
+    type: string,
+    cardID: string,
+  ): Promise<Card | null> {
     const result = (await this.cardEntity.get({
       spaceID,
-      cardID,
+      cardID: `${type}#${cardID}`,
     })) as unknown as GetCommandOutput;
-    return result.Item || null;
+    if (!result.Item) {
+      return null;
+    }
+    const card = result.Item;
+    return this.convertToCard(card as Card);
   }
 
-  async update(spaceID: string, cardID: string, updateCardDto: UpdateCardDto) {
+  async update(cardIdentity: CardIdentity, updateCardDto: UpdateCardDto) {
     const updatedCard = (await this.cardEntity.update(
       {
         ...updateCardDto,
-        spaceID,
-        cardID,
+        spaceID: cardIdentity.spaceID,
+        id: cardIdentity.cardID,
+        cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
       },
       { returnValues: "ALL_NEW" },
     )) as unknown as UpdateCommandOutput;
     return updatedCard.Attributes;
   }
 
-  async remove(spaceID: string, cardID: string) {
-    await this.cardEntity.delete({ spaceID, cardID });
+  async remove(spaceID: string, type: string, cardID: string) {
+    await this.cardEntity.delete({ spaceID, cardID: `${type}#${cardID}` });
     return { message: "Card deleted successfully." };
+  }
+
+  private convertToCard(card: Card): Card {
+    return {
+      spaceID: card.spaceID,
+      id: card.id,
+      type: card.type,
+      name: card.name,
+      parentTaskID: card.parentTaskID || null,
+      attributes: card.attributes,
+    };
   }
 }

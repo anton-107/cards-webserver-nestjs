@@ -1,8 +1,4 @@
-export declare class UpdateCardDto {
-    spaceID?: string | undefined;
-    name?: string;
-    attributes: {
-        [key: string]: string | number | boolean | null;
-    };
+import { CreateCardDto } from "./create-card.dto";
+export declare class UpdateCardDto extends CreateCardDto {
 }
 //# sourceMappingURL=update-card.dto.d.ts.map

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -11,33 +12,54 @@ import {
 import { CardService } from "./card.service";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
+import { ValidateTypePipe } from "./pipes/validate-type.pipe";
+import { CardIdentity } from "./dto/card-identity.dto";
 
 @Controller("card")
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
-  @Post()
-  async create(@Body() createCardDto: CreateCardDto) {
-    return await this.cardService.create(createCardDto);
+  @Post("/:type")
+  async create(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Body() createCardDto: CreateCardDto,
+  ) {
+    return await this.cardService.create(type, createCardDto);
   }
 
-  @Get()
-  async findAll() {
-    return await this.cardService.findAll("space-1");
+  @Get("/:type")
+  async findAll(@Param("type", new ValidateTypePipe()) type: string) {
+    return await this.cardService.findAllOfType("space-1", type);
   }
 
-  @Get(":id")
-  async findOne(@Param("id") id: string) {
-    return await this.cardService.findOne("space-1", id);
+  @Get("/:type/:id")
+  async findOne(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Param("id") id: string,
+  ) {
+    const card = await this.cardService.findOneOfType("space-1", type, id);
+
+    if (!card) {
+      throw new NotFoundException(`Card with ID ${id} not found.`);
+    }
+
+    return card;
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update("space-1", id, updateCardDto);
+  @Patch("/:type/:id")
+  update(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Param("id") id: string,
+    @Body() updateCardDto: UpdateCardDto,
+  ) {
+    return this.cardService.update(new CardIdentity("space-1", type, id), updateCardDto);
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.cardService.remove("space-1", id);
+  @Delete("/:type/:id")
+  remove(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Param("id") id: string,
+  ) {
+    return this.cardService.remove("space-1", type, id);
   }
 }

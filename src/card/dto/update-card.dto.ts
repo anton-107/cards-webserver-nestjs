@@ -1,17 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsEmpty, IsObject, IsOptional } from "class-validator";
+import { CreateCardDto } from "./create-card.dto";
 
-export class UpdateCardDto {
-  @IsEmpty()
-  @ApiProperty()
-  spaceID?: string | undefined;
-
-  @IsOptional()
-  @ApiProperty()
-  name?: string;
-
-  @IsObject()
-  @IsOptional()
-  @ApiProperty()
-  attributes: { [key: string]: string | number | boolean | null } = {};
-}
+export class UpdateCardDto extends CreateCardDto {}
