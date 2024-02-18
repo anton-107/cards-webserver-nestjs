@@ -10,10 +10,10 @@ import {
 } from "@nestjs/common";
 
 import { CardService } from "./card.service";
+import { CardIdentity } from "./dto/card-identity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { ValidateTypePipe } from "./pipes/validate-type.pipe";
-import { CardIdentity } from "./dto/card-identity.dto";
 
 @Controller("card")
 export class CardController {
@@ -52,7 +52,10 @@ export class CardController {
     @Param("id") id: string,
     @Body() updateCardDto: UpdateCardDto,
   ) {
-    return this.cardService.update(new CardIdentity("space-1", type, id), updateCardDto);
+    return this.cardService.update(
+      new CardIdentity("space-1", type, id),
+      updateCardDto,
+    );
   }
 
   @Delete("/:type/:id")
