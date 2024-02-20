@@ -35,9 +35,9 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
-    (0, swagger_1.ApiProperty)({ examples: [null, "card-1"], example: null }),
+    (0, swagger_1.ApiProperty)({ example: 'card-1' }),
     __metadata("design:type", String)
-], CreateCardDto.prototype, "parentTaskID", void 0);
+], CreateCardDto.prototype, "parentCardID", void 0);
 __decorate([
     (0, class_validator_1.IsObject)(),
     (0, class_validator_1.IsOptional)(),

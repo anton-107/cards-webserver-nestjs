@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 
 import { CardService } from "./card.service";
 import { CardIdentity } from "./dto/card-identity.dto";
@@ -16,6 +17,7 @@ import { UpdateCardDto } from "./dto/update-card.dto";
 import { ValidateTypePipe } from "./pipes/validate-type.pipe";
 
 @Controller("card")
+@ApiTags("CardsCRUD")
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 
@@ -30,6 +32,18 @@ export class CardController {
   @Get("/:type")
   async findAll(@Param("type", new ValidateTypePipe()) type: string) {
     return await this.cardService.findAllOfType("space-1", type);
+  }
+
+  @Get("/:type/children-of/:parentID")
+  async findChildren(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Param("parentID") parentID: string,
+  ) {
+    return await this.cardService.findAllOfTypeForParent(
+      "space-1",
+      type,
+      parentID,
+    );
   }
 
   @Get("/:type/:id")

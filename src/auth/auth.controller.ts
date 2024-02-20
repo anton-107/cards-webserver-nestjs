@@ -6,6 +6,7 @@ import {
   Post,
   Res,
 } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
 
 import {
@@ -19,6 +20,7 @@ import { AuthService } from "./auth.service";
   path: "/auth",
   version: "1",
 })
+@ApiTags("CardsAuth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 

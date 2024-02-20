@@ -53,7 +53,7 @@ let CardService = class CardService {
                 id: "string", // id of a resource without card type
                 type: "string",
                 name: "string",
-                parentTaskID: { type: "string", required: false }, // Nullable
+                parentCardID: { type: "string", required: false }, // Nullable
                 attributes: { type: "map" },
                 // Add subtype-specific attributes here or handle dynamically in application logic
             },
@@ -74,7 +74,7 @@ let CardService = class CardService {
             id: card.id,
             type: card.type,
             name: card.name,
-            parentTaskID: card.parentTaskID || null,
+            parentCardID: card.parentCardID || null,
             attributes: card.attributes,
         };
     }
@@ -82,6 +82,21 @@ let CardService = class CardService {
         try {
             const results = await this.cardEntity.query(spaceID, {
                 beginsWith: `${type}#`,
+            });
+            return results.Items?.map((x) => this.convertToCard(x));
+        }
+        catch (error) {
+            // Handle or throw the error appropriately
+            throw new Error(`Error fetching cards for spaceID ${spaceID}: ${error}`);
+        }
+    }
+    async findAllOfTypeForParent(spaceID, type, parentID) {
+        try {
+            const results = await this.cardEntity.query(spaceID, {
+                beginsWith: `${type}#`,
+                filters: [
+                    { attr: 'parentCardID', eq: parentID }
+                ]
             });
             return results.Items?.map((x) => this.convertToCard(x));
         }
@@ -120,7 +135,7 @@ let CardService = class CardService {
             id: card.id,
             type: card.type,
             name: card.name,
-            parentTaskID: card.parentTaskID || null,
+            parentCardID: card.parentCardID || null,
             attributes: card.attributes,
         };
     }

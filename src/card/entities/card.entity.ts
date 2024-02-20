@@ -3,6 +3,6 @@ export interface Card {
   id: string;
   type: string;
   name: string;
-  parentTaskID: string | null;
+  parentCardID: string | null;
   attributes: { [key: string]: string | number | boolean | null };
 }

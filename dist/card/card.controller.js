@@ -15,10 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardController = void 0;
 const common_1 = require("@nestjs/common");
 const card_service_1 = require("./card.service");
+const card_identity_dto_1 = require("./dto/card-identity.dto");
 const create_card_dto_1 = require("./dto/create-card.dto");
 const update_card_dto_1 = require("./dto/update-card.dto");
 const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
-const card_identity_dto_1 = require("./dto/card-identity.dto");
+const swagger_1 = require("@nestjs/swagger");
 let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;
@@ -28,6 +29,9 @@ let CardController = class CardController {
     }
     async findAll(type) {
         return await this.cardService.findAllOfType("space-1", type);
+    }
+    async findChildren(type, parentID) {
+        return await this.cardService.findAllOfTypeForParent("space-1", type, parentID);
     }
     async findOne(type, id) {
         const card = await this.cardService.findOneOfType("space-1", type, id);
@@ -60,6 +64,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "findAll", null);
 __decorate([
+    (0, common_1.Get)("/:type/children-of/:parentID"),
+    __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
+    __param(1, (0, common_1.Param)("parentID")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], CardController.prototype, "findChildren", null);
+__decorate([
     (0, common_1.Get)("/:type/:id"),
     __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
     __param(1, (0, common_1.Param)("id")),
@@ -86,5 +98,6 @@ __decorate([
 ], CardController.prototype, "remove", null);
 exports.CardController = CardController = __decorate([
     (0, common_1.Controller)("card"),
+    (0, swagger_1.ApiTags)("CardsCRUD"),
     __metadata("design:paramtypes", [card_service_1.CardService])
 ], CardController);

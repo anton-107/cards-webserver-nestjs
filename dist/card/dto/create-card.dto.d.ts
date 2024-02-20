@@ -1,7 +1,7 @@
 export declare class CreateCardDto {
     spaceID: string;
     name: string;
-    parentTaskID?: string;
+    parentCardID?: string;
     attributes: {
         [key: string]: string | number | boolean | null;
     };

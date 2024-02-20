@@ -14,8 +14,8 @@ export class CreateCardDto {
 
   @IsOptional()
   @IsString()
-  @ApiProperty({ examples: [null, "card-1"], example: null })
-  parentTaskID?: string;
+  @ApiProperty({ example: "card-1" })
+  parentCardID?: string;
 
   @IsObject()
   @IsOptional()
