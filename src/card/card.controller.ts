@@ -14,6 +14,7 @@ import { CardService } from "./card.service";
 import { CardIdentity } from "./dto/card-identity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
+import { UpdateCardAttributesDto } from "./dto/update-card-attributes.dto";
 import { ValidateTypePipe } from "./pipes/validate-type.pipe";
 
 @Controller("card")
@@ -61,14 +62,26 @@ export class CardController {
   }
 
   @Patch("/:type/:id")
-  update(
+  async update(
     @Param("type", new ValidateTypePipe()) type: string,
     @Param("id") id: string,
     @Body() updateCardDto: UpdateCardDto,
   ) {
-    return this.cardService.update(
+    return await this.cardService.update(
       new CardIdentity("space-1", type, id),
       updateCardDto,
+    );
+  }
+
+  @Patch("/:type/:id/attributes")
+  async updateCardAttributes(
+    @Param("type", new ValidateTypePipe()) type: string,
+    @Param("id") id: string,
+    @Body() updateCardAttributesDto: UpdateCardAttributesDto,
+  ) {
+    return await this.cardService.updateAttributes(
+      new CardIdentity("space-1", type, id),
+      updateCardAttributesDto,
     );
   }
 

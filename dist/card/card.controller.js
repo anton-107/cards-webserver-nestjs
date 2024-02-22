@@ -14,12 +14,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardController = void 0;
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 const card_service_1 = require("./card.service");
 const card_identity_dto_1 = require("./dto/card-identity.dto");
 const create_card_dto_1 = require("./dto/create-card.dto");
 const update_card_dto_1 = require("./dto/update-card.dto");
+const update_card_attributes_dto_1 = require("./dto/update-card-attributes.dto");
 const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
-const swagger_1 = require("@nestjs/swagger");
 let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;
@@ -40,8 +41,11 @@ let CardController = class CardController {
         }
         return card;
     }
-    update(type, id, updateCardDto) {
-        return this.cardService.update(new card_identity_dto_1.CardIdentity("space-1", type, id), updateCardDto);
+    async update(type, id, updateCardDto) {
+        return await this.cardService.update(new card_identity_dto_1.CardIdentity("space-1", type, id), updateCardDto);
+    }
+    async updateCardAttributes(type, id, updateCardAttributesDto) {
+        return await this.cardService.updateAttributes(new card_identity_dto_1.CardIdentity("space-1", type, id), updateCardAttributesDto);
     }
     remove(type, id) {
         return this.cardService.remove("space-1", type, id);
@@ -86,8 +90,17 @@ __decorate([
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, update_card_dto_1.UpdateCardDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], CardController.prototype, "update", null);
+__decorate([
+    (0, common_1.Patch)("/:type/:id/attributes"),
+    __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
+    __param(1, (0, common_1.Param)("id")),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, update_card_attributes_dto_1.UpdateCardAttributesDto]),
+    __metadata("design:returntype", Promise)
+], CardController.prototype, "updateCardAttributes", null);
 __decorate([
     (0, common_1.Delete)("/:type/:id"),
     __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),

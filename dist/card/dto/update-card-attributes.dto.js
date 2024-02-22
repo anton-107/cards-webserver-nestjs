@@ -9,38 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateCardDto = void 0;
+exports.UpdateCardAttributesDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-class CreateCardDto {
+class UpdateCardAttributesDto {
     constructor() {
-        this.spaceID = "";
-        this.name = "";
         this.attributes = {};
     }
 }
-exports.CreateCardDto = CreateCardDto;
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    (0, swagger_1.ApiProperty)({ example: "space-1" }),
-    __metadata("design:type", String)
-], CreateCardDto.prototype, "spaceID", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
-    (0, swagger_1.ApiProperty)({ example: "Card 1" }),
-    __metadata("design:type", String)
-], CreateCardDto.prototype, "name", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, swagger_1.ApiProperty)({ example: "card-1" }),
-    __metadata("design:type", String)
-], CreateCardDto.prototype, "parentCardID", void 0);
+exports.UpdateCardAttributesDto = UpdateCardAttributesDto;
 __decorate([
     (0, class_validator_1.IsObject)(),
-    (0, class_validator_1.IsOptional)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Object)
-], CreateCardDto.prototype, "attributes", void 0);
+], UpdateCardAttributesDto.prototype, "attributes", void 0);

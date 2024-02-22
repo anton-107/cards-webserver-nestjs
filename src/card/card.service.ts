@@ -9,8 +9,9 @@ import { Entity, Table } from "dynamodb-toolbox";
 import shortUUID from "short-uuid";
 
 import { CardIdentity } from "./dto/card-identity.dto";
-import { CreateCardDto } from "./dto/create-card.dto";
+import { CardAttributeValue, CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
+import { UpdateCardAttributesDto } from "./dto/update-card-attributes.dto";
 import { Card } from "./entities/card.entity";
 
 @Injectable()
@@ -138,6 +139,29 @@ export class CardService {
         spaceID: cardIdentity.spaceID,
         id: cardIdentity.cardID,
         cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
+      },
+      { returnValues: "ALL_NEW" },
+    )) as unknown as UpdateCommandOutput;
+    return updatedCard.Attributes;
+  }
+
+  async updateAttributes(
+    cardIdentity: CardIdentity,
+    updateCardAttributesDto: UpdateCardAttributesDto,
+  ) {
+    const fieldsToUpdate: { [key: string]: CardAttributeValue } = {};
+    Object.keys(updateCardAttributesDto.attributes).forEach((k) => {
+      fieldsToUpdate[k] = updateCardAttributesDto.attributes[k];
+    });
+    const updatedCard = (await this.cardEntity.update(
+      {
+        spaceID: cardIdentity.spaceID,
+        cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
+        attributes: {
+          $set: {
+            ...fieldsToUpdate,
+          },
+        },
       },
       { returnValues: "ALL_NEW" },
     )) as unknown as UpdateCommandOutput;

@@ -94,9 +94,7 @@ let CardService = class CardService {
         try {
             const results = await this.cardEntity.query(spaceID, {
                 beginsWith: `${type}#`,
-                filters: [
-                    { attr: 'parentCardID', eq: parentID }
-                ]
+                filters: [{ attr: "parentCardID", eq: parentID }],
             });
             return results.Items?.map((x) => this.convertToCard(x));
         }
@@ -122,6 +120,22 @@ let CardService = class CardService {
             spaceID: cardIdentity.spaceID,
             id: cardIdentity.cardID,
             cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
+        }, { returnValues: "ALL_NEW" }));
+        return updatedCard.Attributes;
+    }
+    async updateAttributes(cardIdentity, updateCardAttributesDto) {
+        const fieldsToUpdate = {};
+        Object.keys(updateCardAttributesDto.attributes).forEach((k) => {
+            fieldsToUpdate[k] = updateCardAttributesDto.attributes[k];
+        });
+        const updatedCard = (await this.cardEntity.update({
+            spaceID: cardIdentity.spaceID,
+            cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
+            attributes: {
+                $set: {
+                    ...fieldsToUpdate,
+                },
+            },
         }, { returnValues: "ALL_NEW" }));
         return updatedCard.Attributes;
     }

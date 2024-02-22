@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
 
+export type CardAttributeValue = string | number | boolean | null;
+
 export class CreateCardDto {
   @IsNotEmpty()
   @IsString()
@@ -20,5 +22,5 @@ export class CreateCardDto {
   @IsObject()
   @IsOptional()
   @ApiProperty()
-  attributes: { [key: string]: string | number | boolean | null } = {};
+  attributes: { [key: string]: CardAttributeValue } = {};
 }
