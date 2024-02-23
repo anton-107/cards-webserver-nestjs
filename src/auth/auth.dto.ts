@@ -1,6 +1,14 @@
-export interface SignInRequest {
-  login: string;
-  password: string;
+import { ApiProperty } from "@nestjs/swagger";
+import { IsString } from "class-validator";
+
+export class SignInRequest {
+  @IsString()
+  @ApiProperty({ example: "testuser1" })
+  login: string = "";
+
+  @IsString()
+  @ApiProperty({ example: "password-1" })
+  password: string = "";
 }
 
 export interface SignInSuccessResponse {

@@ -21,6 +21,8 @@ const create_card_dto_1 = require("./dto/create-card.dto");
 const update_card_dto_1 = require("./dto/update-card.dto");
 const update_card_attributes_dto_1 = require("./dto/update-card-attributes.dto");
 const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
+const auth_guard_1 = require("../auth/auth.guard");
+const constants_1 = require("../auth/constants");
 let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;
@@ -112,5 +114,7 @@ __decorate([
 exports.CardController = CardController = __decorate([
     (0, common_1.Controller)("card"),
     (0, swagger_1.ApiTags)("CardsCRUD"),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, swagger_1.ApiBearerAuth)(constants_1.AUTHORIZATION_HEADER),
     __metadata("design:paramtypes", [card_service_1.CardService])
 ], CardController);

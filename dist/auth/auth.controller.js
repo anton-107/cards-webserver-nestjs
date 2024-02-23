@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const auth_dto_1 = require("./auth.dto");
 const auth_service_1 = require("./auth.service");
 let AuthController = class AuthController {
     constructor(authService) {
@@ -28,7 +29,6 @@ let AuthController = class AuthController {
             };
         }
         catch (error) {
-            // console.error(error);
             response.status(common_1.HttpStatus.FORBIDDEN);
             return {
                 signInResult: false,
@@ -44,7 +44,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [auth_dto_1.SignInRequest, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
 exports.AuthController = AuthController = __decorate([

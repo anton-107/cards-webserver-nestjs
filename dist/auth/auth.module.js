@@ -17,6 +17,7 @@ const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const authenticator_provider_1 = require("./authenticator.provider");
 const user_repository_1 = require("./user.repository");
+const auth_guard_1 = require("./auth.guard");
 const userRepository = new user_repository_1.InMemoryUserRepository();
 const hashGenerator = new scrypt_hashing_1.ScryptHashingFunction();
 let AuthModule = class AuthModule {
@@ -48,7 +49,9 @@ exports.AuthModule = AuthModule = __decorate([
                 provide: "UserStore",
                 useValue: userRepository,
             },
+            auth_guard_1.AuthGuard
         ],
+        exports: [authenticator_1.Authenticator]
     }),
     __metadata("design:paramtypes", [])
 ], AuthModule);

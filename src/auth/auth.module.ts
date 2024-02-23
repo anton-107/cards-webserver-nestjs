@@ -3,6 +3,7 @@ import { Authenticator } from "authentication-module/dist/authenticator";
 import { ScryptHashingFunction } from "authentication-module/dist/scrypt-hashing";
 
 import { AuthController } from "./auth.controller";
+import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { ScryptJWTAuthenticator } from "./authenticator.provider";
 import { InMemoryUserRepository } from "./user.repository";
@@ -26,7 +27,9 @@ const hashGenerator = new ScryptHashingFunction();
       provide: "UserStore",
       useValue: userRepository,
     },
+    AuthGuard,
   ],
+  exports: [Authenticator],
 })
 export class AuthModule {
   constructor() {

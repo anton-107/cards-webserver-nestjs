@@ -7,9 +7,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+import { AuthGuard } from "../auth/auth.guard";
+import { AUTHORIZATION_HEADER } from "../auth/constants";
 import { CardService } from "./card.service";
 import { CardIdentity } from "./dto/card-identity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
@@ -19,6 +22,8 @@ import { ValidateTypePipe } from "./pipes/validate-type.pipe";
 
 @Controller("card")
 @ApiTags("CardsCRUD")
+@UseGuards(AuthGuard)
+@ApiBearerAuth(AUTHORIZATION_HEADER)
 export class CardController {
   constructor(private readonly cardService: CardService) {}
 

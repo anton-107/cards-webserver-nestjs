@@ -39,7 +39,6 @@ export class AuthController {
         bearerToken: accessToken,
       };
     } catch (error) {
-      // console.error(error);
       response.status(HttpStatus.FORBIDDEN);
       return {
         signInResult: false,
