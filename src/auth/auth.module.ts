@@ -6,6 +6,7 @@ import { AuthController } from "./auth.controller";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { ScryptJWTAuthenticator } from "./authenticator.provider";
+import { BearerTokenExtractor } from "./bearer-token-extractor.service";
 import { InMemoryUserRepository } from "./user.repository";
 
 const userRepository = new InMemoryUserRepository();
@@ -28,8 +29,9 @@ const hashGenerator = new ScryptHashingFunction();
       useValue: userRepository,
     },
     AuthGuard,
+    BearerTokenExtractor,
   ],
-  exports: [Authenticator],
+  exports: [Authenticator, BearerTokenExtractor],
 })
 export class AuthModule {
   constructor() {

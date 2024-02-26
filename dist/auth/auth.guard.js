@@ -12,14 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const authenticator_1 = require("authentication-module/dist/authenticator");
-const constants_1 = require("./constants");
+const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
 let AuthGuard = class AuthGuard {
-    constructor(authenticator) {
+    constructor(authenticator, tokenExtractor) {
         this.authenticator = authenticator;
+        this.tokenExtractor = tokenExtractor;
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
-        const accessToken = this.extractTokenFromHeader(request);
+        const accessToken = this.tokenExtractor.extractTokenFromRequest(request);
         if (!accessToken) {
             throw new common_1.UnauthorizedException();
         }
@@ -31,20 +32,17 @@ let AuthGuard = class AuthGuard {
             if (!authResult.isAuthenticated || !authResult.username) {
                 throw new common_1.UnauthorizedException();
             }
-            request['username'] = authResult.username;
+            request["username"] = authResult.username;
         }
         catch {
             throw new common_1.UnauthorizedException();
         }
         return true;
     }
-    extractTokenFromHeader(request) {
-        const [type, scheme, token] = String(request.headers[constants_1.INCOMING_HTTP_HEADER]).split(' ');
-        return type === 'Bearer' ? `${scheme} ${token}` : undefined;
-    }
 };
 exports.AuthGuard = AuthGuard;
 exports.AuthGuard = AuthGuard = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [authenticator_1.Authenticator])
+    __metadata("design:paramtypes", [authenticator_1.Authenticator,
+        bearer_token_extractor_service_1.BearerTokenExtractor])
 ], AuthGuard);

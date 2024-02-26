@@ -9,4 +9,8 @@ export interface SignInErrorResponse {
     signInResult: boolean;
     message: string;
 }
+export interface IdentityResponse {
+    isAuthenticated: boolean;
+    username: string;
+}
 //# sourceMappingURL=auth.dto.d.ts.map

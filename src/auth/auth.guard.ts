@@ -5,17 +5,19 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Authenticator } from "authentication-module/dist/authenticator";
-import { Request } from "express";
 
-import { INCOMING_HTTP_HEADER } from "./constants";
+import { BearerTokenExtractor } from "./bearer-token-extractor.service";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private authenticator: Authenticator) {}
+  constructor(
+    private authenticator: Authenticator,
+    private tokenExtractor: BearerTokenExtractor,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const accessToken = this.extractTokenFromHeader(request);
+    const accessToken = this.tokenExtractor.extractTokenFromRequest(request);
     if (!accessToken) {
       throw new UnauthorizedException();
     }
@@ -32,12 +34,5 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     return true;
-  }
-
-  private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, scheme, token] = String(
-      request.headers[INCOMING_HTTP_HEADER],
-    ).split(" ");
-    return type === "Bearer" ? `${scheme} ${token}` : undefined;
   }
 }

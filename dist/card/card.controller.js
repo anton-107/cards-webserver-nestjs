@@ -15,14 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardController = void 0;
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const auth_guard_1 = require("../auth/auth.guard");
+const constants_1 = require("../auth/constants");
 const card_service_1 = require("./card.service");
 const card_identity_dto_1 = require("./dto/card-identity.dto");
 const create_card_dto_1 = require("./dto/create-card.dto");
 const update_card_dto_1 = require("./dto/update-card.dto");
 const update_card_attributes_dto_1 = require("./dto/update-card-attributes.dto");
 const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
-const auth_guard_1 = require("../auth/auth.guard");
-const constants_1 = require("../auth/constants");
 let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;

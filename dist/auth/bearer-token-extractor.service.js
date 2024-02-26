@@ -6,18 +6,16 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CardModule = void 0;
+exports.BearerTokenExtractor = void 0;
 const common_1 = require("@nestjs/common");
-const auth_module_1 = require("../auth/auth.module");
-const card_controller_1 = require("./card.controller");
-const card_service_1 = require("./card.service");
-let CardModule = class CardModule {
+const constants_1 = require("./constants");
+let BearerTokenExtractor = class BearerTokenExtractor {
+    extractTokenFromRequest(request) {
+        const [type, scheme, token] = String(request.headers[constants_1.INCOMING_HTTP_HEADER]).split(" ");
+        return type === "Bearer" ? `${scheme} ${token}` : undefined;
+    }
 };
-exports.CardModule = CardModule;
-exports.CardModule = CardModule = __decorate([
-    (0, common_1.Module)({
-        controllers: [card_controller_1.CardController],
-        providers: [card_service_1.CardService],
-        imports: [auth_module_1.AuthModule],
-    })
-], CardModule);
+exports.BearerTokenExtractor = BearerTokenExtractor;
+exports.BearerTokenExtractor = BearerTokenExtractor = __decorate([
+    (0, common_1.Injectable)()
+], BearerTokenExtractor);

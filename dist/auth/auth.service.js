@@ -33,6 +33,9 @@ let AuthService = class AuthService {
         }
         return authenticationResult.accessToken;
     }
+    async authenticate(bearerToken) {
+        return await this.authenticator.authenticate(bearerToken);
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([

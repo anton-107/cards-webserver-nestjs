@@ -14,10 +14,11 @@ const common_1 = require("@nestjs/common");
 const authenticator_1 = require("authentication-module/dist/authenticator");
 const scrypt_hashing_1 = require("authentication-module/dist/scrypt-hashing");
 const auth_controller_1 = require("./auth.controller");
+const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
 const authenticator_provider_1 = require("./authenticator.provider");
 const user_repository_1 = require("./user.repository");
-const auth_guard_1 = require("./auth.guard");
+const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
 const userRepository = new user_repository_1.InMemoryUserRepository();
 const hashGenerator = new scrypt_hashing_1.ScryptHashingFunction();
 let AuthModule = class AuthModule {
@@ -49,9 +50,10 @@ exports.AuthModule = AuthModule = __decorate([
                 provide: "UserStore",
                 useValue: userRepository,
             },
-            auth_guard_1.AuthGuard
+            auth_guard_1.AuthGuard,
+            bearer_token_extractor_service_1.BearerTokenExtractor,
         ],
-        exports: [authenticator_1.Authenticator]
+        exports: [authenticator_1.Authenticator, bearer_token_extractor_service_1.BearerTokenExtractor],
     }),
     __metadata("design:paramtypes", [])
 ], AuthModule);

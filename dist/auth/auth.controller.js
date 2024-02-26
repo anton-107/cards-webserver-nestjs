@@ -17,9 +17,12 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const auth_dto_1 = require("./auth.dto");
 const auth_service_1 = require("./auth.service");
+const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
+const constants_1 = require("./constants");
 let AuthController = class AuthController {
-    constructor(authService) {
+    constructor(authService, tokenExtractor) {
         this.authService = authService;
+        this.tokenExtractor = tokenExtractor;
     }
     async signIn(body, response) {
         try {
@@ -36,6 +39,20 @@ let AuthController = class AuthController {
             };
         }
     }
+    async checkIdentity(request) {
+        const bearerToken = this.tokenExtractor.extractTokenFromRequest(request);
+        if (!bearerToken) {
+            return {
+                isAuthenticated: false,
+                username: ''
+            };
+        }
+        const authenticationResult = await this.authService.authenticate(bearerToken);
+        return {
+            isAuthenticated: authenticationResult.isAuthenticated,
+            username: authenticationResult.username || '',
+        };
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -47,11 +64,20 @@ __decorate([
     __metadata("design:paramtypes", [auth_dto_1.SignInRequest, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
+__decorate([
+    (0, common_1.Get)("/whoami"),
+    (0, swagger_1.ApiBearerAuth)(constants_1.AUTHORIZATION_HEADER),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "checkIdentity", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)({
         path: "/auth",
         version: "1",
     }),
     (0, swagger_1.ApiTags)("CardsAuth"),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        bearer_token_extractor_service_1.BearerTokenExtractor])
 ], AuthController);

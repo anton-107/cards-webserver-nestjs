@@ -24,7 +24,7 @@ async function bootstrap() {
         .setDescription("The api to manage cards")
         .setVersion("1.0")
         .addTag("cards")
-        .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'jwt' }, constants_1.AUTHORIZATION_HEADER)
+        .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "jwt" }, constants_1.AUTHORIZATION_HEADER)
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup("swagger-api", app, document);

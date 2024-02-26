@@ -9,6 +9,12 @@ export class AuthenticationError extends Error {
   }
 }
 
+export interface AuthenticationResult {
+  isAuthenticated: boolean;
+  username?: string;
+  errorMessage?: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(private authenticator: Authenticator) {}
@@ -29,5 +35,10 @@ export class AuthService {
       throw new AuthenticationError("Authentication failed");
     }
     return authenticationResult.accessToken;
+  }
+  public async authenticate(
+    bearerToken: string,
+  ): Promise<AuthenticationResult> {
+    return await this.authenticator.authenticate(bearerToken);
   }
 }
