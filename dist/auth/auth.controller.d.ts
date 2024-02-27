@@ -5,6 +5,7 @@ import { BearerTokenExtractor } from "./bearer-token-extractor.service";
 export declare class AuthController {
     private authService;
     private tokenExtractor;
+    private readonly logger;
     constructor(authService: AuthService, tokenExtractor: BearerTokenExtractor);
     signIn(body: SignInRequest, response: Response): Promise<SignInSuccessResponse | SignInErrorResponse>;
     checkIdentity(request: Request): Promise<IdentityResponse>;

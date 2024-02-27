@@ -11,26 +11,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
+const core_1 = require("@nestjs/core");
 const authenticator_1 = require("authentication-module/dist/authenticator");
 const scrypt_hashing_1 = require("authentication-module/dist/scrypt-hashing");
 const auth_controller_1 = require("./auth.controller");
 const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
 const authenticator_provider_1 = require("./authenticator.provider");
-const user_repository_1 = require("./user.repository");
 const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
-const userRepository = new user_repository_1.InMemoryUserRepository();
-const hashGenerator = new scrypt_hashing_1.ScryptHashingFunction();
+const user_repository_1 = require("./user.repository");
 let AuthModule = class AuthModule {
-    constructor() {
-        this.generateDemoUsers();
-    }
-    async generateDemoUsers() {
-        userRepository.addUser({
-            username: "testuser1",
-            passwordHash: await hashGenerator.generateHash("password-1"),
-        });
-    }
+    constructor() { }
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
@@ -44,11 +36,18 @@ exports.AuthModule = AuthModule = __decorate([
             },
             {
                 provide: "PasswordHashingFunction",
-                useValue: hashGenerator,
+                useClass: scrypt_hashing_1.ScryptHashingFunction,
             },
             {
                 provide: "UserStore",
-                useValue: userRepository,
+                inject: [config_1.ConfigService, core_1.ModuleRef],
+                useFactory: (configService, moduleRef) => {
+                    const userStoreType = configService.get(user_repository_1.USER_STORE_TYPE);
+                    if (userStoreType === "dynamodb") {
+                        return moduleRef.create(user_repository_1.DynamoDBUserRepository);
+                    }
+                    return moduleRef.create(user_repository_1.InMemoryUserRepository);
+                },
             },
             auth_guard_1.AuthGuard,
             bearer_token_extractor_service_1.BearerTokenExtractor,

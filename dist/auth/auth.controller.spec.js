@@ -5,6 +5,7 @@ const testing_1 = require("@nestjs/testing");
 const ts_mockito_1 = require("ts-mockito");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
+const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
 describe("AuthController", () => {
     let controller;
     beforeEach(async () => {
@@ -19,6 +20,7 @@ describe("AuthController", () => {
                     provide: auth_service_1.AuthService,
                     useValue: (0, ts_mockito_1.instance)(authServiceMock),
                 },
+                bearer_token_extractor_service_1.BearerTokenExtractor,
             ],
         }).compile();
         controller = module.get(auth_controller_1.AuthController);

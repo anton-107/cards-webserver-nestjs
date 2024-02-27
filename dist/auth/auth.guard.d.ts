@@ -4,6 +4,7 @@ import { BearerTokenExtractor } from "./bearer-token-extractor.service";
 export declare class AuthGuard implements CanActivate {
     private authenticator;
     private tokenExtractor;
+    private readonly logger;
     constructor(authenticator: Authenticator, tokenExtractor: BearerTokenExtractor);
     canActivate(context: ExecutionContext): Promise<boolean>;
 }

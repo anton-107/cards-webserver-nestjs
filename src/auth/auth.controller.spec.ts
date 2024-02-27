@@ -5,6 +5,7 @@ import { instance, mock, verify, when } from "ts-mockito";
 
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { BearerTokenExtractor } from "./bearer-token-extractor.service";
 
 describe("AuthController", () => {
   let controller: AuthController;
@@ -22,6 +23,7 @@ describe("AuthController", () => {
           provide: AuthService,
           useValue: instance(authServiceMock),
         },
+        BearerTokenExtractor,
       ],
     }).compile();
 

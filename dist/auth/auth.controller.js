@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var AuthController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
@@ -19,12 +20,14 @@ const auth_dto_1 = require("./auth.dto");
 const auth_service_1 = require("./auth.service");
 const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
 const constants_1 = require("./constants");
-let AuthController = class AuthController {
+let AuthController = AuthController_1 = class AuthController {
     constructor(authService, tokenExtractor) {
         this.authService = authService;
         this.tokenExtractor = tokenExtractor;
+        this.logger = new common_1.Logger(AuthController_1.name);
     }
     async signIn(body, response) {
+        this.logger.verbose("Sign in attempt ", body.login);
         try {
             const accessToken = await this.authService.signIn(body.login, body.password);
             return {
@@ -32,6 +35,10 @@ let AuthController = class AuthController {
             };
         }
         catch (error) {
+            this.logger.warn("Failed sign in attempt", {
+                body,
+                error: String(error),
+            });
             response.status(common_1.HttpStatus.FORBIDDEN);
             return {
                 signInResult: false,
@@ -44,13 +51,13 @@ let AuthController = class AuthController {
         if (!bearerToken) {
             return {
                 isAuthenticated: false,
-                username: ''
+                username: "",
             };
         }
         const authenticationResult = await this.authService.authenticate(bearerToken);
         return {
             isAuthenticated: authenticationResult.isAuthenticated,
-            username: authenticationResult.username || '',
+            username: authenticationResult.username || "",
         };
     }
 };
@@ -72,7 +79,7 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "checkIdentity", null);
-exports.AuthController = AuthController = __decorate([
+exports.AuthController = AuthController = AuthController_1 = __decorate([
     (0, common_1.Controller)({
         path: "/auth",
         version: "1",

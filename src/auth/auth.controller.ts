@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Logger,
   Post,
   Req,
   Res,
@@ -27,6 +28,8 @@ import { AUTHORIZATION_HEADER } from "./constants";
 })
 @ApiTags("CardsAuth")
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(
     private authService: AuthService,
     private tokenExtractor: BearerTokenExtractor,
@@ -38,6 +41,7 @@ export class AuthController {
     @Body() body: SignInRequest,
     @Res({ passthrough: true }) response: Response,
   ): Promise<SignInSuccessResponse | SignInErrorResponse> {
+    this.logger.verbose("Sign in attempt ", body.login);
     try {
       const accessToken = await this.authService.signIn(
         body.login,
@@ -47,6 +51,10 @@ export class AuthController {
         bearerToken: accessToken,
       };
     } catch (error) {
+      this.logger.warn("Failed sign in attempt", {
+        body,
+        error: String(error),
+      });
       response.status(HttpStatus.FORBIDDEN);
       return {
         signInResult: false,

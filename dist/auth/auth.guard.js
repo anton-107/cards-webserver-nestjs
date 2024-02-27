@@ -8,40 +8,46 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var AuthGuard_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const authenticator_1 = require("authentication-module/dist/authenticator");
 const bearer_token_extractor_service_1 = require("./bearer-token-extractor.service");
-let AuthGuard = class AuthGuard {
+let AuthGuard = AuthGuard_1 = class AuthGuard {
     constructor(authenticator, tokenExtractor) {
         this.authenticator = authenticator;
         this.tokenExtractor = tokenExtractor;
+        this.logger = new common_1.Logger(AuthGuard_1.name);
     }
     async canActivate(context) {
         const request = context.switchToHttp().getRequest();
         const accessToken = this.tokenExtractor.extractTokenFromRequest(request);
         if (!accessToken) {
-            throw new common_1.UnauthorizedException();
+            this.logger.verbose("Authentication failed: empty auth token");
+            return false;
         }
         try {
             const authResult = await this.authenticator.authenticate(accessToken);
             if (authResult.errorMessage) {
-                throw new common_1.UnauthorizedException(authResult.errorMessage);
+                this.logger.verbose(`Authentication failed: ${authResult.errorMessage}`);
+                return false;
             }
             if (!authResult.isAuthenticated || !authResult.username) {
-                throw new common_1.UnauthorizedException();
+                this.logger.verbose(`Authentication failed: unknown reason`);
+                return false;
             }
             request["username"] = authResult.username;
+            return true;
         }
-        catch {
-            throw new common_1.UnauthorizedException();
+        catch (err) {
+            this.logger.verbose(`Authentication failed: ${err}`);
+            return false;
         }
-        return true;
     }
 };
 exports.AuthGuard = AuthGuard;
-exports.AuthGuard = AuthGuard = __decorate([
+exports.AuthGuard = AuthGuard = AuthGuard_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [authenticator_1.Authenticator,
         bearer_token_extractor_service_1.BearerTokenExtractor])
