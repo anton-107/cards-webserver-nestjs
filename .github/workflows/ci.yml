@@ -23,5 +23,5 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run test:coverage
-      - run: npm run test:e2e
+      - run: rm -rf .dynamodblocal-bin/ && npm run test:e2e
       - run: npm run build

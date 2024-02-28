@@ -11,8 +11,6 @@ const sleep = async (sleepMs: number): Promise<void> =>
 export const startDynamoLocal = async (endpointPort: number) => {
   DynamoDbLocal.configureInstaller({
     installPath: "./.dynamodblocal-bin",
-    downloadUrl:
-      "https://s3.eu-central-1.amazonaws.com/dynamodb-local-frankfurt/dynamodb_local_latest.tar.gz",
   });
 
   const ddbClient = new DynamoDBClient({
@@ -27,7 +25,7 @@ export const startDynamoLocal = async (endpointPort: number) => {
   );
 
   // wait for local dynamo to initialize:
-  for (let retries = 0; retries <= 5; retries += 1) {
+  for (let retries = 0; retries <= 10; retries += 1) {
     try {
       await ddbClient.send(new ListTablesCommand({}));
       return { ddbClient, dynamoLocalProcess };
@@ -38,10 +36,11 @@ export const startDynamoLocal = async (endpointPort: number) => {
 
   // eslint-disable-next-line no-console
   console.log(
-    "dynamoLocalProcess: process info (exit code, standard error, standard output)",
+    "dynamoLocalProcess: process info (exit code, standard error, standard output, process object)",
     dynamoLocalProcess.exitCode,
     dynamoLocalProcess.stderr,
     dynamoLocalProcess.stdout,
+    dynamoLocalProcess,
   );
   // eslint-disable-next-line no-console
   console.log(
