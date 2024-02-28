@@ -48,9 +48,9 @@ export class SpaceController {
   }
 
   @Get()
-  findAll(@Req() request: AuthorizedRequest) {
+  async findAll(@Req() request: AuthorizedRequest) {
     return {
-      spaces: this.spaceService.findAllOwnedBy(
+      spaces: await this.spaceService.findAllOwnedBy(
         request[USERNAME_REQUEST_PROPERTY],
       ),
     };

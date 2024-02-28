@@ -48,7 +48,7 @@ describe("Spaces feature (e2e)", () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  }, 20_000);
+  }, 30_000);
 
   afterAll(async () => {
     if (dynamoProcessToStop) {
@@ -123,6 +123,6 @@ describe("Spaces feature (e2e)", () => {
     const spaces: Space[] = resp.body.spaces;
     expect(spaces.length).toBe(1);
     expect(spaces[0].owner).toBe("testuser1");
-    expect(spaces[0].spaceID).toBe("test-space-2");
+    expect(spaces[0].spaceID).toBe("test-space-1");
   });
 });

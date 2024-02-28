@@ -7,23 +7,22 @@ import { Space, SpaceEntity } from "./entities/space.entity";
 
 @Injectable()
 export class SpaceService {
-  constructor(private spaceDynamoDBTableFactory: SpaceDynamoDBTableFactory) {}
+  private table;
+  constructor(spaceDynamoDBTableFactory: SpaceDynamoDBTableFactory) {
+    this.table = spaceDynamoDBTableFactory.build();
+  }
   async create(createSpaceDto: CreateSpaceDto, owner: string): Promise<Space> {
     const record = {
       spaceID: createSpaceDto.spaceID,
       sortKey: "SPACE",
       owner,
     };
-    await SpaceEntity.setTable(this.spaceDynamoDBTableFactory.build()).put(
-      record,
-    );
+    await SpaceEntity.setTable(this.table).put(record);
     return record;
   }
 
   async findAllOwnedBy(owner: string) {
-    const response = await SpaceEntity.setTable(
-      this.spaceDynamoDBTableFactory.build(),
-    ).scan({
+    const response = await SpaceEntity.setTable(this.table).scan({
       filters: [{ attr: "owner", eq: owner }],
     });
     return response.Items;

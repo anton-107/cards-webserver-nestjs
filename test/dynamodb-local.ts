@@ -21,13 +21,13 @@ export const startDynamoLocal = async (endpointPort: number) => {
   const dynamoLocalProcess = await DynamoDbLocal.launch(
     endpointPort,
     null,
-    ["-sharedDb"],
+    [],
     false,
     true,
   );
 
   // wait for local dynamo to initialize:
-  for (let retries = 0; retries <= 1; retries += 1) {
+  for (let retries = 0; retries <= 5; retries += 1) {
     try {
       await ddbClient.send(new ListTablesCommand({}));
       return { ddbClient, dynamoLocalProcess };
