@@ -7,6 +7,11 @@ jobs:
       matrix:
         node: [18]
     name: Node ${{ matrix.node }} sample
+    env:
+      AWS_REGION: eu-west-1 # needed for e2e tests against local dynamo (dynamo client still requires region)
+      AWS_ACCESS_KEY_ID: empty
+      AWS_SECRET_ACCESS_KEY: empty
+      AWS_SESSION_TOKEN: empty
     steps:
       - uses: actions/checkout@v3
       - name: Setup node

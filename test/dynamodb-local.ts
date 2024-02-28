@@ -25,7 +25,7 @@ export const startDynamoLocal = async (endpointPort: number) => {
   );
 
   // wait for local dynamo to initialize:
-  for (let retries = 0; retries <= 10; retries += 1) {
+  for (let retries = 0; retries <= 5; retries += 1) {
     try {
       await ddbClient.send(new ListTablesCommand({}));
       return { ddbClient, dynamoLocalProcess };

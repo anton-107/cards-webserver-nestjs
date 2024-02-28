@@ -48,7 +48,7 @@ describe("Spaces feature (e2e)", () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  }, 60_000);
+  }, 10_000);
 
   afterAll(async () => {
     if (dynamoProcessToStop) {
