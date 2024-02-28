@@ -5,8 +5,15 @@ import {
   Logger,
 } from "@nestjs/common";
 import { Authenticator } from "authentication-module/dist/authenticator";
+import { Request } from "express";
 
 import { BearerTokenExtractor } from "./bearer-token-extractor.service";
+
+export const USERNAME_REQUEST_PROPERTY = "USERNAME_REQUEST_PROPERTY";
+
+export interface AuthorizedRequest extends Request {
+  USERNAME_REQUEST_PROPERTY: string;
+}
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -36,7 +43,7 @@ export class AuthGuard implements CanActivate {
         this.logger.verbose(`Authentication failed: unknown reason`);
         return false;
       }
-      request["username"] = authResult.username;
+      request[USERNAME_REQUEST_PROPERTY] = authResult.username;
       return true;
     } catch (err) {
       this.logger.verbose(`Authentication failed: ${err}`);

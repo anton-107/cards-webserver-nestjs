@@ -13,6 +13,7 @@ const auth_module_1 = require("../auth/auth.module");
 const card_module_1 = require("../card/card.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const space_module_1 = require("../space/space.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -21,6 +22,7 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             auth_module_1.AuthModule,
             card_module_1.CardModule,
+            space_module_1.SpaceModule,
             config_1.ConfigModule.forRoot({
                 isGlobal: true, // This makes the ConfigModule global, so you don't need to import it elsewhere
             }),
