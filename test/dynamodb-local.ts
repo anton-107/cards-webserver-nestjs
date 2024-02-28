@@ -30,6 +30,10 @@ export const startDynamoLocal = async (endpointPort: number) => {
       await ddbClient.send(new ListTablesCommand({}));
       return { ddbClient, dynamoLocalProcess };
     } catch (err) {
+      // eslint-disable-next-line no-console
+      console.log("Can not send list tables command", err);
+      // eslint-disable-next-line no-console
+      console.log(err);
       await sleep(3000);
     }
   }
