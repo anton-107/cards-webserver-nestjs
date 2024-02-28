@@ -38,6 +38,13 @@ export const startDynamoLocal = async (endpointPort: number) => {
 
   // eslint-disable-next-line no-console
   console.log(
+    "dynamoLocalProcess: process info (exit code, standard error, standard output)",
+    dynamoLocalProcess.exitCode,
+    dynamoLocalProcess.stderr,
+    dynamoLocalProcess.stdout,
+  );
+  // eslint-disable-next-line no-console
+  console.log(
     "dynamoLocalProcess: try starting to debug",
     dynamoLocalProcess.spawnargs.join(" "),
   );
