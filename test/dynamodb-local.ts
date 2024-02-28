@@ -25,13 +25,17 @@ export const startDynamoLocal = async (endpointPort: number) => {
   );
 
   // wait for local dynamo to initialize:
-  for (let retries = 0; retries <= 5; retries += 1) {
+  const maxRetries = 5;
+  for (let retries = 0; retries <= maxRetries; retries += 1) {
     try {
       await ddbClient.send(new ListTablesCommand({}));
       return { ddbClient, dynamoLocalProcess };
     } catch (err) {
       // eslint-disable-next-line no-console
-      console.log("Can not send list tables command", err);
+      console.log(
+        `Can not send list tables command (this will be automatically retried ${maxRetries} times)`,
+        err,
+      );
       // eslint-disable-next-line no-console
       console.log(err);
       await sleep(3000);
