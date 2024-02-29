@@ -9,6 +9,7 @@ import { AppModule } from "../src/app/app.module";
 import { AUTHORIZATION_HEADER } from "../src/auth/constants";
 import { Space } from "../src/space/entities/space.entity";
 import { createLocalSpacesTable, startDynamoLocal } from "./dynamodb-local";
+import { User } from "./user";
 
 const testConfiguration: { [key: string]: string } = {
   USER_STORE_TYPE: "in-memory",
@@ -18,8 +19,10 @@ const testConfiguration: { [key: string]: string } = {
 
 describe("Spaces feature (e2e)", () => {
   let app: INestApplication;
-  let bearerToken = "";
   let dynamoProcessToStop: ChildProcess;
+
+  const userA = new User("testuser1", "password1");
+  const userB = new User("testuser2", "password2");
 
   beforeAll(async () => {
     // start local dynamodb:
@@ -48,7 +51,12 @@ describe("Spaces feature (e2e)", () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  }, 10_000);
+    const server = app.getHttpServer();
+
+    // sign in users:
+    await userA.signIn(server);
+    await userB.signIn(server);
+  }, 20_000);
 
   afterAll(async () => {
     if (dynamoProcessToStop) {
@@ -71,18 +79,6 @@ describe("Spaces feature (e2e)", () => {
       });
   });
 
-  it("should give you an access token on successful sign in", async () => {
-    const response = await supertest(app.getHttpServer())
-      .post("/auth/signin")
-      .send({ login: "testuser1", password: "password-1" })
-      .expect(200);
-
-    expect(response.body.bearerToken).toMatch(
-      /^jwt\s([A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+)$/,
-    );
-    bearerToken = response.body.bearerToken;
-  });
-
   it("should not allow invalid space id", async () => {
     const invalidSpaceIDExamples = [
       " space1",
@@ -96,16 +92,16 @@ describe("Spaces feature (e2e)", () => {
       await supertest(app.getHttpServer())
         .post("/space")
         .send({ spaceID })
-        .set(AUTHORIZATION_HEADER, `Bearer ${bearerToken}`)
+        .set(AUTHORIZATION_HEADER, userA.authorizationHeader)
         .expect(400);
     }
   });
 
-  it("should allow you to create a new space", () => {
+  it("should allow userA to create a new space", async () => {
     return supertest(app.getHttpServer())
       .post("/space")
       .send({ spaceID: "test-space-1" })
-      .set(AUTHORIZATION_HEADER, `Bearer ${bearerToken}`)
+      .set(AUTHORIZATION_HEADER, userA.authorizationHeader)
       .expect(201)
       .expect({
         spaceID: "test-space-1",
@@ -114,15 +110,40 @@ describe("Spaces feature (e2e)", () => {
       });
   });
 
-  it("should list the space you created", async () => {
+  it("should allow userB to create a new space", async () => {
+    return supertest(app.getHttpServer())
+      .post("/space")
+      .send({ spaceID: "test-space-2" })
+      .set(AUTHORIZATION_HEADER, userB.authorizationHeader)
+      .expect(201)
+      .expect({
+        spaceID: "test-space-2",
+        sortKey: "SPACE",
+        owner: "testuser2",
+      });
+  });
+
+  it("should list the space userA created", async () => {
     const resp = await supertest(app.getHttpServer())
       .get("/space")
-      .set(AUTHORIZATION_HEADER, `Bearer ${bearerToken}`)
+      .set(AUTHORIZATION_HEADER, userA.authorizationHeader)
       .expect(200);
 
     const spaces: Space[] = resp.body.spaces;
     expect(spaces.length).toBe(1);
     expect(spaces[0].owner).toBe("testuser1");
     expect(spaces[0].spaceID).toBe("test-space-1");
+  });
+
+  it("should list the space userB created", async () => {
+    const resp = await supertest(app.getHttpServer())
+      .get("/space")
+      .set(AUTHORIZATION_HEADER, userB.authorizationHeader)
+      .expect(200);
+
+    const spaces: Space[] = resp.body.spaces;
+    expect(spaces.length).toBe(1);
+    expect(spaces[0].owner).toBe("testuser2");
+    expect(spaces[0].spaceID).toBe("test-space-2");
   });
 });

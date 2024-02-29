@@ -28,14 +28,18 @@ export class InMemoryUserRepository implements UserStore {
       this.configService.get<UserStoreType>(USER_STORE_TYPE);
     if (userStoreType === "in-memory") {
       this.logger.verbose("Generating a demo user");
-      this.generateDemoUser();
+      this.generateDemoUsers();
     }
   }
 
-  private async generateDemoUser() {
+  private async generateDemoUsers() {
     this.addUser({
       username: "testuser1",
-      passwordHash: await this.hashGenerator.generateHash("password-1"),
+      passwordHash: await this.hashGenerator.generateHash("password1"),
+    });
+    this.addUser({
+      username: "testuser2",
+      passwordHash: await this.hashGenerator.generateHash("password2"),
     });
   }
 
