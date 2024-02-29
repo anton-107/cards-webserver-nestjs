@@ -44,7 +44,7 @@ describe("AppController (e2e)", () => {
   it("should give you an access token on successful sign in", async () => {
     const response = await supertest(app.getHttpServer())
       .post("/auth/signin")
-      .send({ login: "testuser1", password: "password-1" })
+      .send({ login: "testuser1", password: "password1" })
       .expect(200);
 
     expect(response.body.bearerToken).toMatch(
