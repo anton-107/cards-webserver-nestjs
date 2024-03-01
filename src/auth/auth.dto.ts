@@ -7,7 +7,7 @@ export class SignInRequest {
   login: string = "";
 
   @IsString()
-  @ApiProperty({ example: "password-1" })
+  @ApiProperty({ example: "password1" })
   password: string = "";
 }
 

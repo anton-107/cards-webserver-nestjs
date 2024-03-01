@@ -9,11 +9,11 @@ import { AppModule } from "../src/app/app.module";
 import { AUTHORIZATION_HEADER } from "../src/auth/constants";
 import { Space } from "../src/space/entities/space.entity";
 import { createLocalSpacesTable, startDynamoLocal } from "./dynamodb-local";
-import { User } from "./user";
+import { User } from "./test-entities/user";
 
 const testConfiguration: { [key: string]: string } = {
   USER_STORE_TYPE: "in-memory",
-  DYNAMOCLIENT_ENDPOINT_OVERRIDE: "http://127.0.0.1:8937",
+  DYNAMOCLIENT_ENDPOINT_OVERRIDE: "http://127.0.0.1:8930",
   DYNAMODB_SPACE_TABLENAME: "TestTableForSpaces",
 };
 
@@ -111,13 +111,23 @@ describe("Spaces feature (e2e)", () => {
   });
 
   it("should allow userB to create a new space", async () => {
-    return supertest(app.getHttpServer())
+    await supertest(app.getHttpServer())
       .post("/space")
       .send({ spaceID: "test-space-2" })
       .set(AUTHORIZATION_HEADER, userB.authorizationHeader)
       .expect(201)
       .expect({
         spaceID: "test-space-2",
+        sortKey: "SPACE",
+        owner: "testuser2",
+      });
+    await supertest(app.getHttpServer())
+      .post("/space")
+      .send({ spaceID: "test-space-3" })
+      .set(AUTHORIZATION_HEADER, userB.authorizationHeader)
+      .expect(201)
+      .expect({
+        spaceID: "test-space-3",
         sortKey: "SPACE",
         owner: "testuser2",
       });
@@ -135,15 +145,15 @@ describe("Spaces feature (e2e)", () => {
     expect(spaces[0].spaceID).toBe("test-space-1");
   });
 
-  it("should list the space userB created", async () => {
+  it("should list the spaces userB created", async () => {
     const resp = await supertest(app.getHttpServer())
       .get("/space")
       .set(AUTHORIZATION_HEADER, userB.authorizationHeader)
       .expect(200);
 
     const spaces: Space[] = resp.body.spaces;
-    expect(spaces.length).toBe(1);
+    expect(spaces.length).toBe(2);
     expect(spaces[0].owner).toBe("testuser2");
-    expect(spaces[0].spaceID).toBe("test-space-2");
+    expect(spaces[1].owner).toBe("testuser2");
   });
 });

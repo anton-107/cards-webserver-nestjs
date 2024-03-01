@@ -1,0 +1,1 @@
+{"version":3,"file":"dynamodb-local.d.ts","sourceRoot":"","sources":["../../test/dynamodb-local.ts"],"names":[],"mappings":";AAAA,OAAO,EAGL,cAAc,EAEf,MAAM,0BAA0B,CAAC;AAMlC,eAAO,MAAM,gBAAgB,iBAAwB,MAAM;;;EAkD1D,CAAC;AAEF,wBAAsB,sBAAsB,CAC1C,SAAS,EAAE,cAAc,EACzB,SAAS,EAAE,MAAM,iBAiClB;AAED,wBAAsB,qBAAqB,CACzC,SAAS,EAAE,cAAc,EACzB,SAAS,EAAE,MAAM,iBAiClB"}

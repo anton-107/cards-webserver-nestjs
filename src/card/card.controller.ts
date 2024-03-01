@@ -13,11 +13,14 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
 import { AuthGuard } from "../auth/auth.guard";
 import { AUTHORIZATION_HEADER } from "../auth/constants";
+import { PermissionsGuard } from "../auth/permissions/permission.guard";
+import { Permissions } from "../auth/permissions/permissions.decorator";
 import { CardService } from "./card.service";
 import { CardIdentity } from "./dto/card-identity.dto";
 import { CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { UpdateCardAttributesDto } from "./dto/update-card-attributes.dto";
+import { ValidateSpacePipe } from "./pipes/validate-space.pipe";
 import { ValidateTypePipe } from "./pipes/validate-type.pipe";
 
 @Controller("card")
@@ -35,9 +38,14 @@ export class CardController {
     return await this.cardService.create(type, createCardDto);
   }
 
-  @Get("/:type")
-  async findAll(@Param("type", new ValidateTypePipe()) type: string) {
-    return await this.cardService.findAllOfType("space-1", type);
+  @Get("/list/:spaceID/:type")
+  @UseGuards(PermissionsGuard)
+  @Permissions("list_cards_in_requested_space")
+  async findAllInSpace(
+    @Param("spaceID", new ValidateSpacePipe()) spaceID: string,
+    @Param("type", new ValidateTypePipe()) type: string,
+  ) {
+    return await this.cardService.findAllOfType(spaceID, type);
   }
 
   @Get("/:type/children-of/:parentID")

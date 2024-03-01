@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, PipeTransform } from "@nestjs/common";
 
 @Injectable()
 export class ValidateTypePipe implements PipeTransform<string> {
+  protected parameterName = "Type";
+
   transform(value: string): string {
     const isValid =
       /^[a-zA-Z-]+$/.test(value) &&
@@ -9,7 +11,7 @@ export class ValidateTypePipe implements PipeTransform<string> {
       !value.endsWith("-");
     if (!isValid) {
       throw new BadRequestException(
-        "Type parameter must include only letters and dashes and must not start/end with a dash",
+        `${this.parameterName} parameter must include only letters and dashes and must not start/end with a dash`,
       );
     }
     return value;

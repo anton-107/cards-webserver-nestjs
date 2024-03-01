@@ -1,9 +1,11 @@
-import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { forwardRef, Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ModuleRef } from "@nestjs/core";
 import { Authenticator } from "authentication-module/dist/authenticator";
 import { ScryptHashingFunction } from "authentication-module/dist/scrypt-hashing";
 
+import { SpaceModule } from "../space/space.module";
+import { SpaceService } from "../space/space.service";
 import { AuthController } from "./auth.controller";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
@@ -42,8 +44,10 @@ import {
     },
     AuthGuard,
     BearerTokenExtractor,
+    SpaceService,
   ],
   exports: [Authenticator, BearerTokenExtractor],
+  imports: [forwardRef(() => SpaceModule), ConfigModule],
 })
 export class AuthModule {
   constructor() {}

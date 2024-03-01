@@ -1,71 +1,19 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-  DynamoDBDocumentClient,
-  GetCommandOutput,
-  UpdateCommandOutput,
-} from "@aws-sdk/lib-dynamodb";
+import { GetCommandOutput, UpdateCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@nestjs/common";
-import { Entity, Table } from "dynamodb-toolbox";
 import shortUUID from "short-uuid";
 
 import { CardIdentity } from "./dto/card-identity.dto";
 import { CardAttributeValue, CreateCardDto } from "./dto/create-card.dto";
 import { UpdateCardDto } from "./dto/update-card.dto";
 import { UpdateCardAttributesDto } from "./dto/update-card-attributes.dto";
-import { Card } from "./entities/card.entity";
+import { CardDynamoDBTableFactory } from "./entities/card.dynamodb";
+import { Card, СardEntity } from "./entities/card.entity";
 
 @Injectable()
 export class CardService {
-  private documentClient: DynamoDBDocumentClient;
-  private cardEntity: Entity;
-
-  constructor() {
-    // set up dynamodb toolbox:
-    const marshallOptions = {
-      // Whether to automatically convert empty strings, blobs, and sets to `null`.
-      convertEmptyValues: false, // if not false explicitly, we set it to true.
-      // Whether to remove undefined values while marshalling.
-      removeUndefinedValues: false, // false, by default.
-      // Whether to convert typeof object to map attribute.
-      convertClassInstanceToMap: false, // false, by default.
-    };
-
-    const unmarshallOptions = {
-      // Whether to return numbers as a string instead of converting them to native JavaScript numbers.
-      // NOTE: this is required to be true in order to use the bigint data type.
-      wrapNumbers: false, // false, by default.
-    };
-
-    const translateConfig = { marshallOptions, unmarshallOptions };
-    // DynamoDB DocumentClient
-    this.documentClient = DynamoDBDocumentClient.from(
-      new DynamoDBClient({}),
-      translateConfig,
-    );
-
-    // Define the DynamoDB Table
-    const CardsTable = new Table({
-      name: process.env["DYNAMODB_CARD_TABLENAME"] || "CardTable",
-      partitionKey: "spaceID",
-      sortKey: "cardID",
-      DocumentClient: this.documentClient,
-    });
-
-    // Define the Card Entity
-    this.cardEntity = new Entity({
-      name: "Card",
-      attributes: {
-        spaceID: { partitionKey: true },
-        cardID: { sortKey: true }, // has format of <type>#<id>
-        id: "string", // id of a resource without card type
-        type: "string",
-        name: "string",
-        parentCardID: { type: "string", required: false }, // Nullable
-        attributes: { type: "map" },
-        // Add subtype-specific attributes here or handle dynamically in application logic
-      },
-      table: CardsTable,
-    } as const);
+  private table;
+  constructor(cardDynamoDBTableFactory: CardDynamoDBTableFactory) {
+    this.table = cardDynamoDBTableFactory.build();
   }
 
   async create(type: string, createCardDto: CreateCardDto): Promise<Card> {
@@ -76,7 +24,7 @@ export class CardService {
       id: cardID,
       cardID: `${type}#${cardID}`,
     };
-    await this.cardEntity.put(card);
+    СardEntity.setTable(this.table).put(card);
     return {
       spaceID: card.spaceID,
       id: card.id,
@@ -89,7 +37,7 @@ export class CardService {
 
   async findAllOfType(spaceID: string, type: string) {
     try {
-      const results = await this.cardEntity.query(spaceID, {
+      const results = await СardEntity.setTable(this.table).query(spaceID, {
         beginsWith: `${type}#`,
       });
       return results.Items?.map((x) => this.convertToCard(x as Card));
@@ -105,7 +53,7 @@ export class CardService {
     parentID: string,
   ) {
     try {
-      const results = await this.cardEntity.query(spaceID, {
+      const results = await СardEntity.setTable(this.table).query(spaceID, {
         beginsWith: `${type}#`,
         filters: [{ attr: "parentCardID", eq: parentID }],
       });
@@ -121,7 +69,7 @@ export class CardService {
     type: string,
     cardID: string,
   ): Promise<Card | null> {
-    const result = (await this.cardEntity.get({
+    const result = (await СardEntity.setTable(this.table).get({
       spaceID,
       cardID: `${type}#${cardID}`,
     })) as unknown as GetCommandOutput;
@@ -133,7 +81,7 @@ export class CardService {
   }
 
   async update(cardIdentity: CardIdentity, updateCardDto: UpdateCardDto) {
-    const updatedCard = (await this.cardEntity.update(
+    const updatedCard = (await СardEntity.setTable(this.table).update(
       {
         ...updateCardDto,
         spaceID: cardIdentity.spaceID,
@@ -153,7 +101,7 @@ export class CardService {
     Object.keys(updateCardAttributesDto.attributes).forEach((k) => {
       fieldsToUpdate[k] = updateCardAttributesDto.attributes[k];
     });
-    const updatedCard = (await this.cardEntity.update(
+    const updatedCard = (await СardEntity.setTable(this.table).update(
       {
         spaceID: cardIdentity.spaceID,
         cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
@@ -169,7 +117,9 @@ export class CardService {
   }
 
   async remove(spaceID: string, type: string, cardID: string) {
-    await this.cardEntity.delete({ spaceID, cardID: `${type}#${cardID}` });
+    await СardEntity
+      .setTable(this.table)
+      .delete({ spaceID, cardID: `${type}#${cardID}` });
     return { message: "Card deleted successfully." };
   }
 

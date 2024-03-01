@@ -1,0 +1,1 @@
+{"version":3,"file":"space.d.ts","sourceRoot":"","sources":["../../../test/test-entities/space.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,GAAG,EAAE,MAAM,iBAAiB,CAAC;AAGtC,OAAO,EAAE,IAAI,EAAE,MAAM,QAAQ,CAAC;AAE9B,qBAAa,SAAS;aAEF,OAAO,EAAE,MAAM;aACf,KAAK,EAAE,IAAI;gBADX,OAAO,EAAE,MAAM,EACf,KAAK,EAAE,IAAI;IAGhB,MAAM,CAAC,SAAS,EAAE,GAAG;CAYnC"}

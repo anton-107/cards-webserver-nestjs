@@ -1,4 +1,5 @@
-import { Module } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 
 import { AuthModule } from "../auth/auth.module";
 import { SpaceDynamoDBTableFactory } from "./entities/space.dynamodb";
@@ -8,6 +9,7 @@ import { SpaceService } from "./space.service";
 @Module({
   controllers: [SpaceController],
   providers: [SpaceService, SpaceDynamoDBTableFactory],
-  imports: [AuthModule],
+  imports: [forwardRef(() => AuthModule), ConfigModule],
+  exports: [SpaceService, SpaceDynamoDBTableFactory],
 })
 export class SpaceModule {}

@@ -28,8 +28,18 @@ export class SpaceService {
     return response.Items;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} space`;
+  async findOne(spaceID: string): Promise<Space | null> {
+    const response = await SpaceEntity.setTable(this.table).get({
+      spaceID,
+      sortKey: "SPACE",
+    });
+
+    return response.Item
+      ? {
+          spaceID: response.Item.spaceID,
+          owner: String(response.Item.owner),
+        }
+      : null;
   }
 
   update(id: number, updateSpaceDto: UpdateSpaceDto) {

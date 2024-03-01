@@ -58,7 +58,7 @@ export class SpaceController {
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.spaceService.findOne(+id);
+    return this.spaceService.findOne(id);
   }
 
   @Patch(":id")

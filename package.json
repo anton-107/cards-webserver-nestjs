@@ -7,6 +7,7 @@
     "build": "nest build",
     "test": "jest",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:e2e:verbose": "SHOW_APP_LOGS=true jest --config ./test/jest-e2e.json",
     "test:coverage": "jest --coverage",
     "check-format": "prettier --check .",
     "fix-format": "prettier --write .",

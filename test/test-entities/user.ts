@@ -4,7 +4,7 @@ import { App } from "supertest/types";
 export class User {
   private bearerToken: string | null = null;
   constructor(
-    private login: string,
+    public readonly login: string,
     private password: string,
   ) {}
 
