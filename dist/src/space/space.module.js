@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaceModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const auth_module_1 = require("../auth/auth.module");
 const space_dynamodb_1 = require("./entities/space.dynamodb");
 const space_controller_1 = require("./space.controller");
@@ -19,6 +20,7 @@ exports.SpaceModule = SpaceModule = __decorate([
     (0, common_1.Module)({
         controllers: [space_controller_1.SpaceController],
         providers: [space_service_1.SpaceService, space_dynamodb_1.SpaceDynamoDBTableFactory],
-        imports: [auth_module_1.AuthModule],
+        imports: [(0, common_1.forwardRef)(() => auth_module_1.AuthModule), config_1.ConfigModule],
+        exports: [space_service_1.SpaceService, space_dynamodb_1.SpaceDynamoDBTableFactory],
     })
 ], SpaceModule);

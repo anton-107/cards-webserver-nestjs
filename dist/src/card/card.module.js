@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_module_1 = require("../auth/auth.module");
+const space_module_1 = require("../space/space.module");
 const card_controller_1 = require("./card.controller");
 const card_service_1 = require("./card.service");
 const card_dynamodb_1 = require("./entities/card.dynamodb");
@@ -19,6 +20,6 @@ exports.CardModule = CardModule = __decorate([
     (0, common_1.Module)({
         controllers: [card_controller_1.CardController],
         providers: [card_service_1.CardService, card_dynamodb_1.CardDynamoDBTableFactory],
-        imports: [auth_module_1.AuthModule],
+        imports: [auth_module_1.AuthModule, space_module_1.SpaceModule],
     })
 ], CardModule);

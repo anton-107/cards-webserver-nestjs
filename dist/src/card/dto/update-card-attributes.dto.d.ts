@@ -1,5 +1,6 @@
 import { CardAttributeValue } from "./create-card.dto";
 export declare class UpdateCardAttributesDto {
+    spaceID: string;
     attributes: {
         [key: string]: CardAttributeValue;
     };

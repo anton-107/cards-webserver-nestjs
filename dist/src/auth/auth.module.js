@@ -15,6 +15,8 @@ const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
 const authenticator_1 = require("authentication-module/dist/authenticator");
 const scrypt_hashing_1 = require("authentication-module/dist/scrypt-hashing");
+const space_module_1 = require("../space/space.module");
+const space_service_1 = require("../space/space.service");
 const auth_controller_1 = require("./auth.controller");
 const auth_guard_1 = require("./auth.guard");
 const auth_service_1 = require("./auth.service");
@@ -51,8 +53,10 @@ exports.AuthModule = AuthModule = __decorate([
             },
             auth_guard_1.AuthGuard,
             bearer_token_extractor_service_1.BearerTokenExtractor,
+            space_service_1.SpaceService,
         ],
         exports: [authenticator_1.Authenticator, bearer_token_extractor_service_1.BearerTokenExtractor],
+        imports: [(0, common_1.forwardRef)(() => space_module_1.SpaceModule), config_1.ConfigModule],
     }),
     __metadata("design:paramtypes", [])
 ], AuthModule);

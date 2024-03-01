@@ -1,4 +1,3 @@
-import { GetCommandOutput, UpdateCommandOutput } from "@aws-sdk/lib-dynamodb";
 import { Injectable } from "@nestjs/common";
 import shortUUID from "short-uuid";
 
@@ -69,10 +68,10 @@ export class CardService {
     type: string,
     cardID: string,
   ): Promise<Card | null> {
-    const result = (await СardEntity.setTable(this.table).get({
+    const result = await СardEntity.setTable(this.table).get({
       spaceID,
       cardID: `${type}#${cardID}`,
-    })) as unknown as GetCommandOutput;
+    });
     if (!result.Item) {
       return null;
     }
@@ -81,7 +80,7 @@ export class CardService {
   }
 
   async update(cardIdentity: CardIdentity, updateCardDto: UpdateCardDto) {
-    const updatedCard = (await СardEntity.setTable(this.table).update(
+    const updatedCard = await СardEntity.setTable(this.table).update(
       {
         ...updateCardDto,
         spaceID: cardIdentity.spaceID,
@@ -89,7 +88,7 @@ export class CardService {
         cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
       },
       { returnValues: "ALL_NEW" },
-    )) as unknown as UpdateCommandOutput;
+    );
     return updatedCard.Attributes;
   }
 
@@ -101,7 +100,7 @@ export class CardService {
     Object.keys(updateCardAttributesDto.attributes).forEach((k) => {
       fieldsToUpdate[k] = updateCardAttributesDto.attributes[k];
     });
-    const updatedCard = (await СardEntity.setTable(this.table).update(
+    const updatedCard = await СardEntity.setTable(this.table).update(
       {
         spaceID: cardIdentity.spaceID,
         cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
@@ -112,7 +111,7 @@ export class CardService {
         },
       },
       { returnValues: "ALL_NEW" },
-    )) as unknown as UpdateCommandOutput;
+    );
     return updatedCard.Attributes;
   }
 

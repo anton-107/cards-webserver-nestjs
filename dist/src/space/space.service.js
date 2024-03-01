@@ -32,8 +32,17 @@ let SpaceService = class SpaceService {
         });
         return response.Items;
     }
-    findOne(id) {
-        return `This action returns a #${id} space`;
+    async findOne(spaceID) {
+        const response = await space_entity_1.SpaceEntity.setTable(this.table).get({
+            spaceID,
+            sortKey: "SPACE",
+        });
+        return response.Item
+            ? {
+                spaceID: response.Item.spaceID,
+                owner: String(response.Item.owner),
+            }
+            : null;
     }
     update(id, updateSpaceDto) {
         return `This action updates a #${id} space ${updateSpaceDto}`;

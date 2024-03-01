@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CardService = void 0;
 const common_1 = require("@nestjs/common");
 const short_uuid_1 = __importDefault(require("short-uuid"));
-const card_entity_1 = require("./entities/card.entity");
 const card_dynamodb_1 = require("./entities/card.dynamodb");
+const card_entity_1 = require("./entities/card.entity");
 let CardService = class CardService {
     constructor(cardDynamoDBTableFactory) {
         this.table = cardDynamoDBTableFactory.build();
@@ -65,10 +65,10 @@ let CardService = class CardService {
         }
     }
     async findOneOfType(spaceID, type, cardID) {
-        const result = (await card_entity_1.СardEntity.setTable(this.table).get({
+        const result = await card_entity_1.СardEntity.setTable(this.table).get({
             spaceID,
             cardID: `${type}#${cardID}`,
-        }));
+        });
         if (!result.Item) {
             return null;
         }
@@ -76,12 +76,12 @@ let CardService = class CardService {
         return this.convertToCard(card);
     }
     async update(cardIdentity, updateCardDto) {
-        const updatedCard = (await card_entity_1.СardEntity.setTable(this.table).update({
+        const updatedCard = await card_entity_1.СardEntity.setTable(this.table).update({
             ...updateCardDto,
             spaceID: cardIdentity.spaceID,
             id: cardIdentity.cardID,
             cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
-        }, { returnValues: "ALL_NEW" }));
+        }, { returnValues: "ALL_NEW" });
         return updatedCard.Attributes;
     }
     async updateAttributes(cardIdentity, updateCardAttributesDto) {
@@ -89,7 +89,7 @@ let CardService = class CardService {
         Object.keys(updateCardAttributesDto.attributes).forEach((k) => {
             fieldsToUpdate[k] = updateCardAttributesDto.attributes[k];
         });
-        const updatedCard = (await card_entity_1.СardEntity.setTable(this.table).update({
+        const updatedCard = await card_entity_1.СardEntity.setTable(this.table).update({
             spaceID: cardIdentity.spaceID,
             cardID: `${cardIdentity.type}#${cardIdentity.cardID}`,
             attributes: {
@@ -97,11 +97,13 @@ let CardService = class CardService {
                     ...fieldsToUpdate,
                 },
             },
-        }, { returnValues: "ALL_NEW" }));
+        }, { returnValues: "ALL_NEW" });
         return updatedCard.Attributes;
     }
     async remove(spaceID, type, cardID) {
-        await card_entity_1.СardEntity.setTable(this.table).delete({ spaceID, cardID: `${type}#${cardID}` });
+        await card_entity_1.СardEntity
+            .setTable(this.table)
+            .delete({ spaceID, cardID: `${type}#${cardID}` });
         return { message: "Card deleted successfully." };
     }
     convertToCard(card) {

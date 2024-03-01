@@ -33,7 +33,7 @@ let SpaceController = class SpaceController {
         };
     }
     findOne(id) {
-        return this.spaceService.findOne(+id);
+        return this.spaceService.findOne(id);
     }
     update(id, updateSpaceDto) {
         return this.spaceService.update(+id, updateSpaceDto);

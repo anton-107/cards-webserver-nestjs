@@ -14,10 +14,17 @@ const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class UpdateCardAttributesDto {
     constructor() {
+        this.spaceID = "";
         this.attributes = {};
     }
 }
 exports.UpdateCardAttributesDto = UpdateCardAttributesDto;
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({ example: "space-1" }),
+    __metadata("design:type", String)
+], UpdateCardAttributesDto.prototype, "spaceID", void 0);
 __decorate([
     (0, class_validator_1.IsObject)(),
     (0, swagger_1.ApiProperty)(),

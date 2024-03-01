@@ -11,7 +11,7 @@ export declare class SpaceController {
             [x: string]: any;
         }[] | undefined;
     }>;
-    findOne(id: string): string;
+    findOne(id: string): Promise<import("./entities/space.entity").Space | null>;
     update(id: string, updateSpaceDto: UpdateSpaceDto): string;
     remove(id: string): string;
 }

@@ -61,27 +61,27 @@ export declare const СardEntity: Entity<"Card", undefined, undefined, undefined
         type: "map";
     };
 }, true, "created", "modified", "entity", false>, {
-    name?: string | undefined;
     type?: string | undefined;
+    name?: string | undefined;
     attributes?: any;
-    parentCardID?: string | undefined;
     id?: string | undefined;
-    entity: string;
+    parentCardID?: string | undefined;
     spaceID: any;
-    cardID: any;
     created: string;
     modified: string;
+    entity: string;
+    cardID: any;
 }, {
-    name?: string | undefined;
     type?: string | undefined;
+    name?: string | undefined;
     attributes?: any;
-    parentCardID?: string | undefined;
     id?: string | undefined;
-    entity: string;
+    parentCardID?: string | undefined;
     spaceID: any;
-    cardID: any;
     created: string;
     modified: string;
+    entity: string;
+    cardID: any;
 }, {
     spaceID: any;
     cardID: any;

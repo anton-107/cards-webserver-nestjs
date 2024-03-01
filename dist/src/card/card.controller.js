@@ -17,15 +17,15 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const auth_guard_1 = require("../auth/auth.guard");
 const constants_1 = require("../auth/constants");
+const permission_guard_1 = require("../auth/permissions/permission.guard");
+const permissions_decorator_1 = require("../auth/permissions/permissions.decorator");
 const card_service_1 = require("./card.service");
 const card_identity_dto_1 = require("./dto/card-identity.dto");
 const create_card_dto_1 = require("./dto/create-card.dto");
 const update_card_dto_1 = require("./dto/update-card.dto");
 const update_card_attributes_dto_1 = require("./dto/update-card-attributes.dto");
-const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
 const validate_space_pipe_1 = require("./pipes/validate-space.pipe");
-const permission_guard_1 = require("../auth/permissions/permission.guard");
-const permissions_decorator_1 = require("../auth/permissions/permissions.decorator");
+const validate_type_pipe_1 = require("./pipes/validate-type.pipe");
 let CardController = class CardController {
     constructor(cardService) {
         this.cardService = cardService;
@@ -36,29 +36,31 @@ let CardController = class CardController {
     async findAllInSpace(spaceID, type) {
         return await this.cardService.findAllOfType(spaceID, type);
     }
-    async findChildren(type, parentID) {
-        return await this.cardService.findAllOfTypeForParent("space-1", type, parentID);
+    async findChildren(spaceID, type, parentID) {
+        return await this.cardService.findAllOfTypeForParent(spaceID, type, parentID);
     }
-    async findOne(type, id) {
-        const card = await this.cardService.findOneOfType("space-1", type, id);
+    async findOne(spaceID, type, id) {
+        const card = await this.cardService.findOneOfType(spaceID, type, id);
         if (!card) {
             throw new common_1.NotFoundException(`Card with ID ${id} not found.`);
         }
         return card;
     }
     async update(type, id, updateCardDto) {
-        return await this.cardService.update(new card_identity_dto_1.CardIdentity("space-1", type, id), updateCardDto);
+        return await this.cardService.update(new card_identity_dto_1.CardIdentity(updateCardDto.spaceID, type, id), updateCardDto);
     }
     async updateCardAttributes(type, id, updateCardAttributesDto) {
-        return await this.cardService.updateAttributes(new card_identity_dto_1.CardIdentity("space-1", type, id), updateCardAttributesDto);
+        return await this.cardService.updateAttributes(new card_identity_dto_1.CardIdentity(updateCardAttributesDto.spaceID, type, id), updateCardAttributesDto);
     }
-    remove(type, id) {
-        return this.cardService.remove("space-1", type, id);
+    remove(spaceID, type, id) {
+        return this.cardService.remove(spaceID, type, id);
     }
 };
 exports.CardController = CardController;
 __decorate([
     (0, common_1.Post)("/:type"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("create_card"),
     __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -66,33 +68,41 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "create", null);
 __decorate([
-    (0, common_1.Get)("/list/:space/:type"),
+    (0, common_1.Get)("/list/:spaceID/:type"),
     (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
-    (0, permissions_decorator_1.Permissions)('list_cards_in_requested_space'),
-    __param(0, (0, common_1.Param)("space", new validate_space_pipe_1.ValidateSpacePipe())),
+    (0, permissions_decorator_1.Permissions)("list_cards_in_requested_space"),
+    __param(0, (0, common_1.Param)("spaceID", new validate_space_pipe_1.ValidateSpacePipe())),
     __param(1, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "findAllInSpace", null);
 __decorate([
-    (0, common_1.Get)("/:type/children-of/:parentID"),
-    __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
-    __param(1, (0, common_1.Param)("parentID")),
+    (0, common_1.Get)("/list/:spaceID/:type/children-of/:parentID"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("list_cards_in_requested_space"),
+    __param(0, (0, common_1.Param)("spaceID", new validate_space_pipe_1.ValidateSpacePipe())),
+    __param(1, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
+    __param(2, (0, common_1.Param)("parentID")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "findChildren", null);
 __decorate([
-    (0, common_1.Get)("/:type/:id"),
-    __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
-    __param(1, (0, common_1.Param)("id")),
+    (0, common_1.Get)("/:spaceID/:type/:id"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("list_cards_in_requested_space"),
+    __param(0, (0, common_1.Param)("spaceID", new validate_space_pipe_1.ValidateSpacePipe())),
+    __param(1, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
+    __param(2, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Patch)("/:type/:id"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("update_card"),
     __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
     __param(1, (0, common_1.Param)("id")),
     __param(2, (0, common_1.Body)()),
@@ -102,6 +112,8 @@ __decorate([
 ], CardController.prototype, "update", null);
 __decorate([
     (0, common_1.Patch)("/:type/:id/attributes"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("update_card"),
     __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
     __param(1, (0, common_1.Param)("id")),
     __param(2, (0, common_1.Body)()),
@@ -110,11 +122,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CardController.prototype, "updateCardAttributes", null);
 __decorate([
-    (0, common_1.Delete)("/:type/:id"),
-    __param(0, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
-    __param(1, (0, common_1.Param)("id")),
+    (0, common_1.Delete)("/:spaceID/:type/:id"),
+    (0, common_1.UseGuards)(permission_guard_1.PermissionsGuard),
+    (0, permissions_decorator_1.Permissions)("remove_card"),
+    __param(0, (0, common_1.Param)("spaceID", new validate_space_pipe_1.ValidateSpacePipe())),
+    __param(1, (0, common_1.Param)("type", new validate_type_pipe_1.ValidateTypePipe())),
+    __param(2, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", void 0)
 ], CardController.prototype, "remove", null);
 exports.CardController = CardController = __decorate([

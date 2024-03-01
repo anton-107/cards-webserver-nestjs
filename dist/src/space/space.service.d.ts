@@ -9,7 +9,7 @@ export declare class SpaceService {
     findAllOwnedBy(owner: string): Promise<{
         [x: string]: any;
     }[] | undefined>;
-    findOne(id: number): string;
+    findOne(spaceID: string): Promise<Space | null>;
     update(id: number, updateSpaceDto: UpdateSpaceDto): string;
     remove(id: number): string;
 }

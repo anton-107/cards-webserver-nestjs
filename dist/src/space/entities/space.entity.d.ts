@@ -41,19 +41,19 @@ export declare const SpaceEntity: Entity<"Space", undefined, undefined, undefine
 }, true, "created", "modified", "entity", false>, {
     owner?: string | undefined;
     allowedUsers?: any[] | undefined;
-    sortKey: any;
-    entity: string;
     spaceID: any;
+    sortKey: any;
     created: string;
     modified: string;
+    entity: string;
 }, {
     owner?: string | undefined;
     allowedUsers?: any[] | undefined;
-    sortKey: any;
-    entity: string;
     spaceID: any;
+    sortKey: any;
     created: string;
     modified: string;
+    entity: string;
 }, {
     spaceID: any;
     sortKey: any;

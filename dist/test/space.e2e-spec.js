@@ -13,7 +13,7 @@ const dynamodb_local_2 = require("./dynamodb-local");
 const user_1 = require("./test-entities/user");
 const testConfiguration = {
     USER_STORE_TYPE: "in-memory",
-    DYNAMOCLIENT_ENDPOINT_OVERRIDE: "http://127.0.0.1:8937",
+    DYNAMOCLIENT_ENDPOINT_OVERRIDE: "http://127.0.0.1:8930",
     DYNAMODB_SPACE_TABLENAME: "TestTableForSpaces",
 };
 describe("Spaces feature (e2e)", () => {
