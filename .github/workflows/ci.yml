@@ -31,6 +31,7 @@ jobs:
       - run: rm -rf .dynamodblocal-bin/ && npm run test:e2e
       - run: npm run build
   Notify-Dependencies:
+    needs: Build-And-Test
     runs-on: ubuntu-latest
     steps:
       - name: Trigger workflow in anton-107/cards-webserver-client-ts-axios
