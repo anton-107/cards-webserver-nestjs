@@ -1,0 +1,610 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/auth/signin": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsAuth"
+        ]
+      }
+    },
+    "/auth/whoami": {
+      "get": {
+        "operationId": "AuthController_checkIdentity",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsAuth"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/space": {
+      "post": {
+        "operationId": "SpaceController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSpaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SpaceCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "SpaceController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SpaceCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/space/{id}": {
+      "get": {
+        "operationId": "SpaceController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SpaceCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "SpaceController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSpaceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SpaceCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "SpaceController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "SpaceCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/{type}": {
+      "post": {
+        "operationId": "CardController_create",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/list/{spaceID}/{type}": {
+      "get": {
+        "operationId": "CardController_findAllInSpace",
+        "parameters": [
+          {
+            "name": "spaceID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/list/{spaceID}/{type}/children-of/{parentID}": {
+      "get": {
+        "operationId": "CardController_findChildren",
+        "parameters": [
+          {
+            "name": "spaceID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "parentID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/{spaceID}/{type}/{id}": {
+      "get": {
+        "operationId": "CardController_findOne",
+        "parameters": [
+          {
+            "name": "spaceID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "CardController_remove",
+        "parameters": [
+          {
+            "name": "spaceID",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/{type}/{id}": {
+      "patch": {
+        "operationId": "CardController_update",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    },
+    "/card/{type}/{id}/attributes": {
+      "patch": {
+        "operationId": "CardController_updateCardAttributes",
+        "parameters": [
+          {
+            "name": "type",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCardAttributesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "CardsCRUD"
+        ],
+        "security": [
+          {
+            "Authorization": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Cards API",
+    "description": "The api to manage cards",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "cards",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "Authorization": {
+        "scheme": "bearer",
+        "bearerFormat": "jwt",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "SignInRequest": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "testuser1"
+          },
+          "password": {
+            "type": "string",
+            "example": "password1"
+          }
+        },
+        "required": [
+          "login",
+          "password"
+        ]
+      },
+      "CreateSpaceDto": {
+        "type": "object",
+        "properties": {
+          "spaceID": {
+            "type": "string",
+            "example": "space-1"
+          }
+        },
+        "required": [
+          "spaceID"
+        ]
+      },
+      "UpdateSpaceDto": {
+        "type": "object",
+        "properties": {
+          "spaceID": {
+            "type": "string",
+            "example": "space-1"
+          }
+        }
+      },
+      "CreateCardDto": {
+        "type": "object",
+        "properties": {
+          "spaceID": {
+            "type": "string",
+            "example": "space-1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Card 1"
+          },
+          "parentCardID": {
+            "type": "string",
+            "example": "card-1"
+          },
+          "attributes": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "spaceID",
+          "name",
+          "parentCardID",
+          "attributes"
+        ]
+      },
+      "UpdateCardDto": {
+        "type": "object",
+        "properties": {
+          "spaceID": {
+            "type": "string",
+            "example": "space-1"
+          },
+          "name": {
+            "type": "string",
+            "example": "Card 1"
+          },
+          "parentCardID": {
+            "type": "string",
+            "example": "card-1"
+          },
+          "attributes": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "spaceID",
+          "name",
+          "parentCardID",
+          "attributes"
+        ]
+      },
+      "UpdateCardAttributesDto": {
+        "type": "object",
+        "properties": {
+          "spaceID": {
+            "type": "string",
+            "example": "space-1"
+          },
+          "attributes": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "spaceID",
+          "attributes"
+        ]
+      }
+    }
+  }
+}
