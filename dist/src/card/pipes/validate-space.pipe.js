@@ -9,10 +9,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ValidateSpacePipe = void 0;
 const common_1 = require("@nestjs/common");
 const validate_type_pipe_1 = require("./validate-type.pipe");
-let ValidateSpacePipe = class ValidateSpacePipe extends validate_type_pipe_1.ValidateTypePipe {
+let ValidateSpacePipe = class ValidateSpacePipe {
     constructor() {
-        super(...arguments);
+        this.logger = new common_1.Logger(validate_type_pipe_1.ValidateTypePipe.name);
         this.parameterName = "Space";
+    }
+    transform(value) {
+        const isValid = /^[a-zA-Z0-9-]+$/.test(value) &&
+            !value.startsWith("-") &&
+            !value.endsWith("-");
+        if (!isValid) {
+            this.logger.warn(`Bad request: ${this.parameterName}=${value} (value length: ${value.length})`);
+            throw new common_1.BadRequestException(`${this.parameterName} parameter must include only letters and dashes and must not start/end with a dash`);
+        }
+        return value;
     }
 };
 exports.ValidateSpacePipe = ValidateSpacePipe;

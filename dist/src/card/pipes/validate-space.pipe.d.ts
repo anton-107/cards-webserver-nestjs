@@ -1,6 +1,7 @@
 import { PipeTransform } from "@nestjs/common";
-import { ValidateTypePipe } from "./validate-type.pipe";
-export declare class ValidateSpacePipe extends ValidateTypePipe implements PipeTransform<string> {
+export declare class ValidateSpacePipe implements PipeTransform<string> {
+    private logger;
     protected parameterName: string;
+    transform(value: string): string;
 }
 //# sourceMappingURL=validate-space.pipe.d.ts.map

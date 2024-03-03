@@ -19,7 +19,7 @@ let ValidateTypePipe = ValidateTypePipe_1 = class ValidateTypePipe {
             !value.startsWith("-") &&
             !value.endsWith("-");
         if (!isValid) {
-            this.logger.warn(`Bad request: ${this.parameterName}=${value} (value length: ${value.length})`, /^[a-zA-Z-]+$/.test(value));
+            this.logger.warn(`Bad request: ${this.parameterName}=${value} (value length: ${value.length})`);
             throw new common_1.BadRequestException(`${this.parameterName} parameter must include only letters and dashes and must not start/end with a dash`);
         }
         return value;
