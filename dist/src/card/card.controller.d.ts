@@ -11,28 +11,28 @@ export declare class CardController {
     findOne(spaceID: string, type: string, id: string): Promise<import("./entities/card.entity").Card>;
     update(type: string, id: string, updateCardDto: UpdateCardDto): Promise<import("ts-toolbelt/out/Object/Pick")._Pick<{
         type?: string | undefined;
-        name?: string | undefined;
-        attributes?: any;
         id?: string | undefined;
+        name?: string | undefined;
         parentCardID?: string | undefined;
+        attributes?: any;
         spaceID: any;
+        cardID: any;
         created: string;
         modified: string;
         entity: string;
-        cardID: any;
-    }, "spaceID" | "type" | "name" | "created" | "modified" | "entity" | "attributes" | "id" | "parentCardID" | "cardID"> | undefined>;
+    }, "type" | "spaceID" | "cardID" | "id" | "name" | "parentCardID" | "attributes" | "created" | "modified" | "entity"> | undefined>;
     updateCardAttributes(type: string, id: string, updateCardAttributesDto: UpdateCardAttributesDto): Promise<import("ts-toolbelt/out/Object/Pick")._Pick<{
         type?: string | undefined;
-        name?: string | undefined;
-        attributes?: any;
         id?: string | undefined;
+        name?: string | undefined;
         parentCardID?: string | undefined;
+        attributes?: any;
         spaceID: any;
+        cardID: any;
         created: string;
         modified: string;
         entity: string;
-        cardID: any;
-    }, "spaceID" | "type" | "name" | "created" | "modified" | "entity" | "attributes" | "id" | "parentCardID" | "cardID"> | undefined>;
+    }, "type" | "spaceID" | "cardID" | "id" | "name" | "parentCardID" | "attributes" | "created" | "modified" | "entity"> | undefined>;
     remove(spaceID: string, type: string, id: string): Promise<{
         message: string;
     }>;

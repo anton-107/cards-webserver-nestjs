@@ -52,7 +52,7 @@ export class AuthController {
       };
     } catch (error) {
       this.logger.warn("Failed sign in attempt", {
-        body,
+        data: body.login,
         error: String(error),
       });
       response.status(HttpStatus.FORBIDDEN);

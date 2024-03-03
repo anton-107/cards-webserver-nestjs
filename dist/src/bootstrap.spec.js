@@ -23,14 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const bootstrap_1 = require("./bootstrap");
 const fs = __importStar(require("fs"));
+const bootstrap_1 = require("./bootstrap");
 describe("Main application", () => {
     let app = null;
     afterAll(async () => {
         if (app) {
             await app.close();
-            console.log("nest.js app closed");
         }
     });
     it("should write Swagger API JSON definitions to disk", async () => {

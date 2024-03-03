@@ -36,7 +36,7 @@ let AuthController = AuthController_1 = class AuthController {
         }
         catch (error) {
             this.logger.warn("Failed sign in attempt", {
-                body,
+                data: body.login,
                 error: String(error),
             });
             response.status(common_1.HttpStatus.FORBIDDEN);
