@@ -11,7 +11,7 @@ import {
   StandardJwtImplementation,
 } from "authentication-module/dist/jwt-serializer";
 
-const AUTH_TOKEN_EXPIRATION_HOURS = "AUTH_TOKEN_EXPIRATION_HOURS";
+export const AUTH_TOKEN_EXPIRATION_HOURS = "AUTH_TOKEN_EXPIRATION_HOURS";
 
 @Injectable()
 export class ScryptJWTAuthenticator extends Authenticator {
@@ -32,7 +32,7 @@ export class ScryptJWTAuthenticator extends Authenticator {
       authTokensSerializer: new JWTSerializer({
         jwt: new StandardJwtImplementation(),
         secretKeyProvider: new SimpleStringProvider(String(Math.random())),
-        expiresInSeconds: expiresInHours / 3600,
+        expiresInSeconds: expiresInHours * 3600,
       }),
     });
 

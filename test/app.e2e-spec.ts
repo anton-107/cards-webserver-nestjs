@@ -4,10 +4,13 @@ import { Test } from "@nestjs/testing";
 import supertest from "supertest";
 
 import { AppModule } from "../src/app/app.module";
+import { AUTH_TOKEN_EXPIRATION_HOURS } from "../src/auth/authenticator.provider";
 import { AUTHORIZATION_HEADER } from "../src/auth/constants";
+import { USER_STORE_TYPE } from "../src/auth/user.repository";
 
-const testConfiguration: { [key: string]: string } = {
-  USER_STORE_TYPE: "in-memory",
+const testConfiguration: { [key: string]: string | number } = {
+  [USER_STORE_TYPE]: "in-memory",
+  [AUTH_TOKEN_EXPIRATION_HOURS]: 0.5,
 };
 
 describe("AppController (e2e)", () => {
@@ -20,17 +23,21 @@ describe("AppController (e2e)", () => {
     })
       .overrideProvider(ConfigService)
       .useValue({
-        get: (key: string): string => {
+        get: (key: string): string | number => {
           return testConfiguration[key];
         },
       })
       .compile();
 
     app = moduleFixture.createNestApplication();
+    if (process.env.SHOW_APP_LOGS) {
+      app.useLogger(console);
+    }
     await app.init();
   });
 
   afterAll(async () => {
+    app.flushLogs();
     await app.close();
   });
 

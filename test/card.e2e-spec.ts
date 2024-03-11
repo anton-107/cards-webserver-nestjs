@@ -6,6 +6,7 @@ import DynamoDbLocal from "dynamodb-local";
 import supertest from "supertest";
 
 import { AppModule } from "../src/app/app.module";
+import { AUTH_TOKEN_EXPIRATION_HOURS } from "../src/auth/authenticator.provider";
 import { AUTHORIZATION_HEADER } from "../src/auth/constants";
 import { Card } from "../src/card/entities/card.entity";
 import {
@@ -16,11 +17,12 @@ import {
 import { TestSpace } from "./test-entities/space";
 import { User } from "./test-entities/user";
 
-const testConfiguration: { [key: string]: string } = {
+const testConfiguration: { [key: string]: string | number } = {
   USER_STORE_TYPE: "in-memory",
   DYNAMOCLIENT_ENDPOINT_OVERRIDE: "http://127.0.0.1:8931",
   DYNAMODB_SPACE_TABLENAME: "TestTableForSpaces",
   DYNAMODB_CARD_TABLENAME: "TestTableForCards",
+  [AUTH_TOKEN_EXPIRATION_HOURS]: 0.5,
 };
 
 describe("Spaces feature (e2e)", () => {
@@ -34,19 +36,20 @@ describe("Spaces feature (e2e)", () => {
 
   beforeAll(async () => {
     // start local dynamodb:
-    const port =
-      testConfiguration["DYNAMOCLIENT_ENDPOINT_OVERRIDE"].split(":")[2];
+    const port = String(
+      testConfiguration["DYNAMOCLIENT_ENDPOINT_OVERRIDE"],
+    ).split(":")[2];
     const { ddbClient, dynamoLocalProcess } = await startDynamoLocal(
       parseInt(port),
     );
     dynamoProcessToStop = dynamoLocalProcess;
     await createLocalSpacesTable(
       ddbClient,
-      testConfiguration["DYNAMODB_SPACE_TABLENAME"],
+      String(testConfiguration["DYNAMODB_SPACE_TABLENAME"]),
     );
     await createLocalCardsTable(
       ddbClient,
-      testConfiguration["DYNAMODB_CARD_TABLENAME"],
+      String(testConfiguration["DYNAMODB_CARD_TABLENAME"]),
     );
 
     // start nest.js application:
@@ -55,7 +58,7 @@ describe("Spaces feature (e2e)", () => {
     })
       .overrideProvider(ConfigService)
       .useValue({
-        get: (key: string): string => {
+        get: (key: string): string | number => {
           return testConfiguration[key];
         },
       })
