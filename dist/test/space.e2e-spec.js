@@ -44,7 +44,7 @@ describe("Spaces feature (e2e)", () => {
         // sign in users:
         await userA.signIn(server);
         await userB.signIn(server);
-    }, 20000);
+    }, 20_000);
     afterAll(async () => {
         if (dynamoProcessToStop) {
             await dynamodb_local_1.default.stopChild(dynamoProcessToStop);

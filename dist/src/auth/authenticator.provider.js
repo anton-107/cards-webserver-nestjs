@@ -11,29 +11,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var ScryptJWTAuthenticator_1;
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScryptJWTAuthenticator = void 0;
+exports.ScryptJWTAuthenticator = exports.AUTH_TOKEN_EXPIRATION_HOURS = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const authenticator_1 = require("authentication-module/dist/authenticator");
 const jwt_serializer_1 = require("authentication-module/dist/jwt-serializer");
-let ScryptJWTAuthenticator = class ScryptJWTAuthenticator extends authenticator_1.Authenticator {
-    constructor(userStore, passwordHashingFunction) {
+exports.AUTH_TOKEN_EXPIRATION_HOURS = 'AUTH_TOKEN_EXPIRATION_HOURS';
+let ScryptJWTAuthenticator = ScryptJWTAuthenticator_1 = class ScryptJWTAuthenticator extends authenticator_1.Authenticator {
+    constructor(userStore, passwordHashingFunction, configService) {
+        const expiresInHours = configService.get(exports.AUTH_TOKEN_EXPIRATION_HOURS) || 1;
         super({
             userStore,
             passwordHashingFunction,
             authTokensSerializer: new jwt_serializer_1.JWTSerializer({
                 jwt: new jwt_serializer_1.StandardJwtImplementation(),
                 secretKeyProvider: new jwt_serializer_1.SimpleStringProvider(String(Math.random())),
+                expiresInSeconds: expiresInHours / 3600
             }),
         });
-        this.userStore = userStore;
-        this.passwordHashingFunction = passwordHashingFunction;
+        this.logger = new common_1.Logger(ScryptJWTAuthenticator_1.name);
+        this.logger.verbose(`Initialized ScryptJWTAuthenticator to serialize JWT tokens that expire in ${expiresInHours} hour(s)`);
+        ;
     }
 };
 exports.ScryptJWTAuthenticator = ScryptJWTAuthenticator;
-exports.ScryptJWTAuthenticator = ScryptJWTAuthenticator = __decorate([
+exports.ScryptJWTAuthenticator = ScryptJWTAuthenticator = ScryptJWTAuthenticator_1 = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, common_1.Inject)("UserStore")),
     __param(1, (0, common_1.Inject)("PasswordHashingFunction")),
-    __metadata("design:paramtypes", [Object, Object])
+    __metadata("design:paramtypes", [Object, Object, config_1.ConfigService])
 ], ScryptJWTAuthenticator);
