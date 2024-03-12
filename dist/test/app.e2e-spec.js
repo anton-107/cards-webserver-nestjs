@@ -7,9 +7,12 @@ const config_1 = require("@nestjs/config");
 const testing_1 = require("@nestjs/testing");
 const supertest_1 = __importDefault(require("supertest"));
 const app_module_1 = require("../src/app/app.module");
+const authenticator_provider_1 = require("../src/auth/authenticator.provider");
 const constants_1 = require("../src/auth/constants");
+const user_repository_1 = require("../src/auth/user.repository");
 const testConfiguration = {
-    USER_STORE_TYPE: "in-memory",
+    [user_repository_1.USER_STORE_TYPE]: "in-memory",
+    [authenticator_provider_1.AUTH_TOKEN_EXPIRATION_HOURS]: 0.5,
 };
 describe("AppController (e2e)", () => {
     let app;
@@ -26,9 +29,13 @@ describe("AppController (e2e)", () => {
         })
             .compile();
         app = moduleFixture.createNestApplication();
+        if (process.env.SHOW_APP_LOGS) {
+            app.useLogger(console);
+        }
         await app.init();
     });
     afterAll(async () => {
+        app.flushLogs();
         await app.close();
     });
     it("should tell you that you are not authenticated", () => {
